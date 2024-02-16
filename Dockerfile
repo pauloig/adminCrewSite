@@ -1,5 +1,5 @@
 FROM python:3.9-alpine3.13
-LABEL maintainer="wiringconnection.com"
+LABEL maintainer="rhcommunications.com"
 
 ENV PYTHONBUFERED 1
 ENV USER_ID=65536
@@ -33,6 +33,7 @@ RUN mkdir -p /vol/web/static && \
     mkdir -p /vol/web/media && \
     chown -R app:appGroup /vol && \
     chmod -R 755 /vol && \
+    chmod -R 777 /vol && \
     chmod -R +x /scripts
 
 ENV PATH="/scripts:/py/bin:$PATH"
