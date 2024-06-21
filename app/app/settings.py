@@ -146,6 +146,9 @@ USE_TZ = True
 STATIC_URL = '/static/static/'
 MEDIA_URL = '/static/media/'
 
+if DEBUG:
+    MEDIA_URL = 'media/'
+
 MEDIA_ROOT = '/vol/web/media'
 
 STATICFILES_DIRS = [

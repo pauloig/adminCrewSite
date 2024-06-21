@@ -21,7 +21,8 @@ urlpatterns = [
              }
          ),
          name='login'),
-         path('login/',viewHome.login),
+    path('login/',viewHome.login),
+    path('logout/', LogoutView.as_view(next_page='/login/'), name='logout'),
 ]
 
 
