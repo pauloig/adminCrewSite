@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'authentication',
+    'catalog',
     'import_export',
     'sequences.apps.SequencesConfig',
     'django.contrib.humanize',

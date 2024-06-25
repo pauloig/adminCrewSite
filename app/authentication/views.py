@@ -46,3 +46,8 @@ def login(request):
             message = "Username or password is incorrect"
     dic = {'state': state, 'message': message}
     return render(request, 'login.html', dic)
+
+def prueba(request):
+    status = 0
+
+    return render(request, 'authentication/prueba.html')
