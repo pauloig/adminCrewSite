@@ -1,0 +1,44 @@
+from contextlib import nullcontext
+from operator import truediv
+from pyexpat import model
+from random import choices
+from statistics import mode
+from unittest.util import _MAX_LENGTH
+from django.db import models
+from django.contrib.auth.models import User
+from datetime import date, datetime
+from catalog import models as catalogModel
+
+prodStatus_choice = (
+    (1, 'Sent'),
+    (2, 'Pending'),
+    (3, 'Aproved'),
+    (4, 'Rejected')
+)
+
+class Timesheet(models.Model):
+    EmployeeID = models.ForeignKey(catalogModel.Employee, on_delete=models.CASCADE, db_column ='EmployeeID', null=False, blank=False)
+    date = models.DateField(null=False, blank=False)
+    start_time = models.IntegerField(null=True, blank=True)
+    start_lunch_time = models.IntegerField(null=True, blank=True)
+    end_lunch_time = models.IntegerField(null=True, blank=True)
+    end_time = models.IntegerField(null=True, blank=True)
+    total_hours = models.FloatField(null=True, blank=True)
+    regular_hours = models.FloatField(null=True, blank=True)
+    ot_hour = models.FloatField(null=True, blank=True)
+    double_time = models.FloatField(null=True, blank=True)
+    start_mileage = models.IntegerField(null=True, blank=True)
+    end_mileage = models.IntegerField(null=True, blank=True)
+    total_mileage = models.IntegerField(null=True, blank=True)
+    Status = models.IntegerField(default=1, choices = prodStatus_choice)     
+    created_date = models.DateTimeField(null=True, blank=True)
+    createdBy = models.CharField(max_length=60, blank=True, null=True)
+    updated_date = models.DateTimeField(null=True, blank=True)
+    updatedBy = models.CharField(max_length=60, blank=True, null=True)
+
+    def __str__(self):
+        return  str(self.date)
+    
+    #class Meta:
+    #    unique_together = ('EmployeeID',date)
+    #COnsultar cuantas veces puede enviar el empleado información al dia

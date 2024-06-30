@@ -9,9 +9,9 @@
         {% csrf_token %}
 
         <div class="row">      
-            <div class="col-sm-8 my-3"></div>  
-            <div class="col-sm-4 my-3">
-                <a class="btn btn-success" href="/create_employee/" role="button">Create Employee</a>
+            <div class="col-sm-10 my-3"></div>  
+            <div class="col-sm-2 my-3">
+                <a class="btn btn-success" href="/create_employee/" role="button">New</a>
                 <a href="/home/" type="button" class="btn btn-danger">Close</a> 
             </div>
                
@@ -22,7 +22,7 @@
                     <div class="card-header">
                         <div class="row">
                             <div class="col-sm-9">
-                                <h6 class="" >Employee List </h6>
+                                <h6 class="" >Timesheet Employee List </h6>
                             </div>
                            
                         </div>
@@ -33,30 +33,17 @@
                                 <table id="orders" class="table table-sm table-bordered table-striped">
                                         <thead class="table-primary">
                                             <tr>
-                                                <th scope="col" style="width: 7%">EID</th>
-                                                <th scope="col" style="width: 20%">First Name</th>
-                                                <th scope="col" style="width: 20%">Last Name</th>
-                                                <th scope="col" style="width: 5%">Is Active</th>
-                                                <th scope="col" style="width: 10%">Location</th>
-                                                <th scope="col" style="width: 10%">User</th>
-                                                <th scope="col" style="width: 5%">Is Supervisor</th>
-                                                <th scope="col" style="width: 10%">Email</th>
-                                                <th scope="col" style="width: 10%">Supervisor Name</th>
+                                                
+                                                <th scope="col" style="width: 7%">Date</th>
+                                            
                                                 <th scope="col" style="width: 3%"></th>
                                             </tr>              
                                         </thead>
                                         <tbody>                                       
                                             {% for data in dataset %}
                                                 <tr>
-                                                    <td>{{data.employeeID}}</td>
-                                                    <td>{{data.first_name}}</td>
-                                                    <td>{{data.last_name}}</td>
-                                                    <td>{{data.is_active}}</td>
-                                                    <td>{{data.Location}}</td>
-                                                    <td>{{data.user}}</td>
-                                                    <td>{{data.is_supervisor}}</td>
-                                                    <td>{{data.email}}</td>
-                                                    <td>{{data.supervisor_name}}</td>
+                                                    
+                                                    <td>{{data.date}}</td>                                                    
                                                     <td> 
                                                         <a href="/update_employee/{{data.employeeID}}"><i class="fa-solid fa-pen-to-square" style="color: green;"></i></a>
                                                         

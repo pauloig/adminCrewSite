@@ -6,15 +6,15 @@ from django.conf.urls.static import static
 from django.conf import settings
 from authentication import views as viewHome
 from authentication import forms, views
-from catalog import views as catalogViews
 
 urlpatterns = [
+    # Admin URLs
     path('admin/', admin.site.urls),
-    path('home/', include('authentication.urls')),
-    path('prueba/',viewHome.prueba),
-    path('employee_list/',catalogViews.employee_list),
-    path('create_employee/',catalogViews.create_employee),
-    path('update_employee/<id>',catalogViews.update_employee),
+    path('login/',viewHome.login),
+    path('logout/', LogoutView.as_view(next_page='/login/'), name='logout'),
+    path('', include('authentication.urls')),
+    path('', include('pwa.urls')),
+    path('home/', include('authentication.urls')), 
     path('',
          LoginView.as_view
          (
@@ -26,8 +26,11 @@ urlpatterns = [
              }
          ),
          name='login'),
-    path('login/',viewHome.login),
-    path('logout/', LogoutView.as_view(next_page='/login/'), name='logout'),
+    
+    # Catalog URLs
+    path('catalog/', include('catalog.urls')),
+    # Timesheet URLs
+    path('timesheet/', include('timesheet.urls')), 
 ]
 
 

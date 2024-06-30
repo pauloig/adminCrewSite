@@ -15,6 +15,7 @@ def home(request):
         context        
     )
 
+
 def login(request):
     state = 0
     message = ""
@@ -29,12 +30,8 @@ def login(request):
             login_process(request, user)
             state = 1
             message = ""
-
             opType = "Log In"
             opDetail = "Login Successfull"
-
-            
-
             return redirect('/home/')
         else:
             state = 2
