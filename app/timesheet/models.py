@@ -10,10 +10,11 @@ from datetime import date, datetime
 from catalog import models as catalogModel
 
 prodStatus_choice = (
-    (1, 'Sent'),
-    (2, 'Pending'),
-    (3, 'Aproved'),
-    (4, 'Rejected')
+    (1, 'Draft'),
+    (2, 'Sent'),
+    (3, 'Pending'),
+    (4, 'Aproved'),
+    (5, 'Rejected')
 )
 
 class Timesheet(models.Model):

@@ -32,7 +32,7 @@ def login(request):
             message = ""
             opType = "Log In"
             opDetail = "Login Successfull"
-            return redirect('/home/')
+            return redirect('/home')
         else:
             state = 2
             opType = "Log In"

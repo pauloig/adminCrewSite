@@ -6,4 +6,6 @@ from timesheet import views
 
 urlpatterns = [
      path('employee_list/',views.employee_list),   
+     path('create/',views.create),
+     path('update/<id>',views.update),
 ]
