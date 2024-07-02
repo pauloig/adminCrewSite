@@ -35,7 +35,8 @@ def create_employee(request):
         form.instance.employeeID = empID
         form.save()
         # Return to Emp List
-        return render(request, "catalog/employee_list.html", context)
+        return HttpResponseRedirect('/catalog/employee_list/')
+        
          
     context['form']= form
     context["emp"] = emp
@@ -54,7 +55,7 @@ def update_employee(request, id):
         form.save()
         context["dataset"] = Employee.objects.all()  
         context["emp"] = emp       
-        return render(request, "catalog/employee_list.html", context)
+        return HttpResponseRedirect('/catalog/employee_list/')
 
     context["form"] = form
     context["emp"] = emp

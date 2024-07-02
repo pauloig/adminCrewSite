@@ -1,0 +1,73 @@
+{% extends 'index.html' %} 
+{%load static%}
+{% block title %} Duplicate Order List {% endblock %} 
+
+{% block container %}
+
+<div class="container">
+    <form method='post' enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="row">      
+            <div class="col-sm-10 my-3"></div>  
+            <div class="col-sm-2 my-3">
+                <a class="btn btn-success" href="/timesheet/create_by_supervisor/" role="button">New</a>
+                <a href="/home/" type="button" class="btn btn-danger">Close</a> 
+            </div>              
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12 my-3">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <h6 class="" >Timesheet List </h6>
+                            </div>                           
+                        </div>
+                    </div>  
+                    <div class="card-body">
+                        <div class="col-lg-12">   
+                            <table id="orders" class="table table-sm table-bordered table-striped">
+                                    <thead class="table-primary">
+                                        <tr>
+                                            <th scope="col" style="width: 20%">Employee</th>
+                                            <th scope="col" style="width: 10%">Date</th>
+                                            <th scope="col" style="width: 10%">Total Hours</th>
+                                            <th scope="col" style="width: 10%">Total Mileage</th>
+                                            <th scope="col" style="width: 10%">Status</th>
+                                            <th scope="col" style="width: 3%"></th>
+                                        </tr>              
+                                    </thead>
+                                    <tbody>                                       
+                                        {% for data in dataset %}
+                                            <tr>
+                                                <td>{{data.EmployeeID}}</td>
+                                                <td>{{data.date}}</td>    
+                                                <td>{{data.total_hours}}</td> 
+                                                <td>{{data.total_mileage}}</td> 
+                                                <td>
+                                                    {% if data.Status == 1 %} Draft
+                                                    {% elif  data.Status == 2%} Sent
+                                                    {% elif  data.Status == 3%} Pending
+                                                    {% elif  data.Status == 4%} Aproved
+                                                    {% elif  data.Status == 5%} Rejected
+                                                    {% endif %}
+                                                </td>    
+                                                <td> 
+                        
+                                                    <a href="/timesheet/update_by_super/{{data.id}}"><i class="fa-solid fa-pen-to-square" style="color: green;"></i></a>
+                                                    
+                                                </td>
+                                            </tr>                                             
+                                        {% endfor %}
+                                    </tbody>                              
+                            </table> 
+                        </div>
+                    </div>                  
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
