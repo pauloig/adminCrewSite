@@ -97,7 +97,7 @@ def supervisor_list(request):
     context ={}
 
     
-    context["dataset"] = Timesheet.objects.filter(Status__in =  (2,3))
+    context["dataset"] = Timesheet.objects.filter(Status__in =  (2,3), Location = emp.Location)
     
     context["emp"]= emp
 

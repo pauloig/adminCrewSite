@@ -16,9 +16,11 @@ class TimesheetForm(forms.ModelForm):
             'start_mileage',
             'end_mileage',
             'total_mileage',
+            'Location',
             'Status', 
             'createdBy',
             'created_date',
+            'updated_date',
         ]
 
     def __init__(self, *args, **kwargs):
@@ -27,6 +29,8 @@ class TimesheetForm(forms.ModelForm):
         self.fields['Status'].disabled = True
         self.fields['createdBy'].disabled = True
         self.fields['created_date'].disabled = True
+        self.fields['updated_date'].disabled = True
+        self.fields['total_mileage'].disabled = True
 
 
 class TimesheetSuperForm(forms.ModelForm):   
@@ -42,6 +46,7 @@ class TimesheetSuperForm(forms.ModelForm):
             'start_mileage',
             'end_mileage',
             'total_mileage',
+            'Location',
             'Status', 
             'createdBy',
             'created_date',
