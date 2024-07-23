@@ -1,4 +1,4 @@
-{% extends 'index.html' %} 
+{% extends 'base.html' %} 
 {%load static%}
 {% load widget_tweaks%}
 {% load humanize %}
@@ -32,7 +32,7 @@
                                 </div>
                             </div> 
                             <div class="row">
-                                <div class="col-sm-8">
+                                <div class="col-sm-12">
                                                                    
                                         <label for="{{ form.start_time.id_for_label }}" class="form-label2">Clock In</label>                                                                           
                                         {% render_field form.start_time class="form-control2" name="start_time" id="start_time" placeholder="E.g. 800" onchange='validateInputs(this)' %}                                                                             
@@ -42,7 +42,7 @@
                             </div>
                             
                             <div class="row">
-                                <div class="col-sm-4">
+                                <div class="col-sm-12">
                                     <div class="mb3-mobile">
                                         <label for="{{ form.start_lunch_time.id_for_label }}" class="form-label2">Lunch Start</label>
                                         {% render_field form.start_lunch_time class="form-control2" name="start_lunch_time" id="start_lunch_time" placeholder="E.g. 1200" onchange='validateInputs(this)'  %}
@@ -53,7 +53,7 @@
                             </div>
                             
                             <div class="row">
-                                <div class="col-sm-4">
+                                <div class="col-sm-12">
                                     <div class="mb3-mobile">
                                         <label for="{{ form.end_lunch_time.id_for_label }}" class="form-label2">Lunch End</label>
                                         {% render_field form.end_lunch_time class="form-control2" name="end_lunch_time" id="end_lunch_time" placeholder="E.g. 1400" onchange='validateInputs(this)'%}
@@ -65,7 +65,7 @@
 
 
                             <div class="row">
-                                <div class="col-sm-8">
+                                <div class="col-sm-12">
                                     <div class="mb3-mobile">
                                         <label for="{{ form.end_time.id_for_label }}" class="form-label2">Clock Out</label>
                                         {% render_field form.end_time class="form-control2" name="end_time" id="end_time" placeholder="E.g. 1700" onchange='validateInputs(this)' %}
@@ -78,7 +78,7 @@
                             
 
                             <div class="row">
-                                <div class="col-sm-8">
+                                <div class="col-sm-12">
                                     <div class="mb3-mobile">
                                         <label for="{{ form.start_mileage.id_for_label }}" class="form-label2">Starting Mileage</label>
                                         {% render_field form.start_mileage class="form-control2" name="start_mileage" id="start_mileage" placeholder="E.g. 1000" onchange='setMilleage(this)'  %}
@@ -91,7 +91,7 @@
                             
 
                             <div class="row">
-                                <div class="col-sm-8">
+                                <div class="col-sm-12">
                                     <div class="mb3-mobile">
                                         <label for="{{ form.start_mileage.id_for_label }}" class="form-label2">Ending Mileage</label>
                                         {% render_field form.end_mileage class="form-control2" name="end_mileage" id="end_mileage" placeholder="E.g. 1200" onchange='setMilleage(this)' %}
@@ -102,7 +102,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-sm-8">
+                                <div class="col-sm-12">
                                     <div class="mb3-mobile">
                                         <label for="{{ form.total_mileage.id_for_label }}" class="form-label2">Total Mileage</label>
                                         {% render_field form.total_mileage class="form-control2" name="total_mileage" id="total_mileage" %}
@@ -110,10 +110,10 @@
                                        
                                     </div>
                                 </div>
-                            </div>
+                            </div> 
 
                             <div class="row">
-                                <div class="col-sm-8">
+                                <div class="col-sm-12">
                                     <div class="mb3-mobile">
                                         <label for="{{ form.Location.id_for_label }}" class="form-label2">Location</label>
                                         {% render_field form.Location class="form-control2" name="Location" id="Location" %}
@@ -124,7 +124,7 @@
                             </div>
                             
                             <div class="row">
-                                <div class="col-sm-8">
+                                <div class="col-sm-12">
                                     <div class="mb3-mobile">
                                         <label for="{{ form.Status.id_for_label }}" class="form-label2">Status</label>
                                         {% render_field form.Status class="form-control2"  %}
@@ -134,7 +134,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-sm-8">
+                                <div class="col-sm-12">
                                     <div class="mb3-mobile">
                                         <label for="{{ form.created_date.id_for_label }}" class="form-label2">Created Date</label>
                                         {% render_field form.created_date class="form-control2" %}
@@ -153,7 +153,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-6">  
+                                <div class="col-sm-12">  
                                     <div class="form-outline" style="align-items: center;">                                       
                                         <!-- <input type="submit" value="Save"> -->
                                         <input class="btn btn-primary" name = "save_btn" id = "save_btn" type="submit" value="Save">

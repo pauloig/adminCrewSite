@@ -1639,12 +1639,12 @@ pre {
     opacity: 1; }
 
     .info-text {
-      padding-left: 130px;
+      padding-left: 7rem;
       color: var(--blue);
     }
 
     .error-text {
-      padding-left: 130px;
+      padding-left: 7rem;
       color: var(--red);
     }
 
@@ -1658,11 +1658,11 @@ pre {
     .form-label2 {
       margin-bottom: .5rem;
       color: rgba(0, 0, 0, .6);
-      width: 120px;
+      width: 7rem;
     }
     .form-control2 {
       display:inline-block;
-      width: 60%;
+      width: 50%;
       height: calc(1.5em + 0.75rem + 2px);
       padding: 0.375rem 0.75rem;
       font-size: 1rem;
