@@ -127,7 +127,8 @@
                                 <div class="col-sm-12">
                                     <div class="mb3-mobile">
                                         <label for="{{ form.Status.id_for_label }}" class="form-label2">Status</label>
-                                        {% render_field form.Status class="form-control2"  %}
+                                        <input type="text" id="newstatus" name="newstatus" minlength="4" maxlength="8" size="10" hidden/>
+                                        {% render_field form.Status class="form-control2" name="estatus" id="estatus" %}
                                         <div class="invalid-feedback">{{ form.Status.errors|first }}</div>
                                     </div>
                                 </div>
@@ -155,12 +156,15 @@
                             <div class="row">
                                 <div class="col-sm-12">  
                                     <div class="form-outline" style="align-items: center;">                                       
-                                        <!-- <input type="submit" value="Save"> -->
+                                      
                                         <input class="btn btn-primary" name = "save_btn" id = "save_btn" type="submit" value="Save">
                                         
-                                     
-                                            <a class="btn btn-success send-btn"  href="/timesheet/update_status/{{id}}/2" role="button">Send</a>      
-                                                            
+                                        <!--<a class="btn btn-success send-btn"  href="/timesheet/update_status/{{id}}/2" role="button">Send</a>  -->    
+                                       
+                                        {% if object.id > 0 %}
+                                            <a class = "btn btn-success" href="" onClick="prueba(this)">Send</a>                   
+                                        {%endif%}
+
                                         <a class="btn btn-danger" href="/timesheet/employee_list" role="button">Close</a>
                                     </div>
                                 </div>

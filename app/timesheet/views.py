@@ -52,13 +52,16 @@ def update(request, id):
     form = TimesheetForm(request.POST or None, instance = obj)
 
     if form.is_valid():
+        if request.POST.get('newstatus') != '' :
+            form.instance.Status = request.POST.get('newstatus')
+
         form.instance.updatedBy = request.user.username
         form.instance.updated_date = datetime.now()    
         form.save()
         # Return to Locations List
         return HttpResponseRedirect('/timesheet/employee_list/')
 
-         
+    context["object"] = obj     
     context['form']= form
     context["emp"] = emp
     context["id"] = id
@@ -91,13 +94,25 @@ def update_status(request, id, status):
 **************** SUPERVISOR *********************************
 """
 
-
+@login_required(login_url='/home/')
 def supervisor_list(request):
     emp = catalogModel.Employee.objects.filter(user__username__exact = request.user.username).first()
     context ={}
+    estatus = "0"
+
+    if request.method == "POST":
+        estatus = request.POST.get('status')
+       
+    
+    context["selectEstatus"] = estatus    
+
+    if estatus == "0":
+        ts = Timesheet.objects.filter(Status__in =  (2,3), Location = emp.Location)
+    else:
+        ts = Timesheet.objects.filter(Status = estatus , Location = emp.Location)
 
     
-    context["dataset"] = Timesheet.objects.filter(Status__in =  (2,3), Location = emp.Location)
+    context["dataset"] = ts
     
     context["emp"]= emp
 
@@ -129,9 +144,17 @@ def updateBySuper(request, id):
     context ={}
 
     obj = get_object_or_404(Timesheet, id = id)
-    form = TimesheetSuperForm(request.POST or None, instance = obj)
+
+    if obj.Status == 4:
+        form = TimesheetSuperFormApproved(request.POST or None, instance = obj)
+    else:
+        form = TimesheetSuperForm(request.POST or None, instance = obj)
 
     if form.is_valid():
+    
+        if request.POST.get('newstatus') != '' :
+                form.instance.Status = request.POST.get('newstatus')
+
         form.instance.updatedBy = request.user.username
         form.instance.updated_date = datetime.now()    
         form.save()
@@ -139,6 +162,7 @@ def updateBySuper(request, id):
         return HttpResponseRedirect('/timesheet/supervisor_list/')
 
          
+    context['obj']= obj
     context['form']= form
     context["emp"] = emp
     context["id"] = id

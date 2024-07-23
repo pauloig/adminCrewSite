@@ -10,10 +10,64 @@
 
         <div class="row">      
             <div class="col-sm-10 my-3"></div>  
-            <div class="col-sm-2 my-3">
-                <a class="btn btn-success" href="/timesheet/create_by_supervisor/" role="button">New</a>
-                <a href="/home/" type="button" class="btn btn-danger">Close</a> 
-            </div>              
+                        
+        </div>
+
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <h6 class="card-header card-header-wc" >Filters</h6>
+                    <div class="card-body">
+                        <div class="row">                   
+                            <div class="col-lg-4">   
+                                Status                                                  
+                                <select class="form-select" aria-label="Default select example" name="status" id="status"> 
+                                    
+                                    {%if selectEstatus == "0"%} 
+                                        <option value ="0"  selected >Status</option>
+                                    {%else%}
+                                        <option value ="0" >Status</option>
+                                    {%endif%}
+                                    
+                                    {%if selectEstatus == "2"%}
+                                        <option value="2" selected>Sent</option>
+                                    {%else%}
+                                        <option value="2">Sent</option>
+                                    {%endif%}
+                                    {%if selectEstatus == "3"%}
+                                        <option value="3" selected>Pending</option>
+                                    {%else%}
+                                        <option value="3" >Pending</option>
+                                    {%endif%}
+                                    {%if selectEstatus == "4"%}
+                                        <option value="4" selected>Aproved</option>
+                                    {%else%}
+                                        <option value="4">Aproved</option>
+                                    {%endif%}                                    
+                                  </select>
+
+                                  
+                            </div>
+                            <div class="col-lg-5 my-4">
+                                <input class="btn btn-primary" type="submit" value="Search"> 
+                            </div>
+                            <div class="col-sm-2 my-3">
+                                <a class="btn btn-success" href="/timesheet/create_by_supervisor/" role="button">New</a>
+                                <a href="/home/" type="button" class="btn btn-danger">Close</a> 
+                            </div>  
+                                               
+                        
+                            <div class="col-lg-4">                                                              
+                                <div class="form-outline" style="align-items: center;">
+                                    
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="row">

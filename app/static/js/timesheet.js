@@ -2,6 +2,8 @@
 
     window.onload = function () {
         validateInputs();
+        
+        
     }
 
     // Function to validate Mileage
@@ -300,5 +302,34 @@
         return isValid;
     }
     
+    function prueba()
+    {
+
+        event.preventDefault();
+
+        console.log(document.getElementById("newstatus"));
+        if (confirm("Are you sure to Send this timesheet"))
+        {
+            document.getElementById("estatus").value = 2;
+            document.getElementById("newstatus").value = 2;
+            document.getElementById("Timesheet").submit();
+        }
+            
+    }
+
+    function updateStatus(event2, newS, msgAlert)
+    {
+
+        event.preventDefault();
+
+        console.log(document.getElementById("newstatus"));
+        if (confirm(msgAlert))
+        {
+            document.getElementById("estatus").value = newS;
+            document.getElementById("newstatus").value = newS;
+            document.getElementById("Timesheet").submit();
+        }
+            
+    }
 
 }

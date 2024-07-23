@@ -9,9 +9,8 @@
 
 <script src="{% static 'js/timesheet.js' %}"></script>
 
-
 <div class="container">
-    <form method='post' enctype="multipart/form-data" onload="validarCampos()">
+    <form method='post' enctype="multipart/form-data" onload="validarCampos" id="Timesheet">
         {% csrf_token %}
         
         <div class="row">
@@ -24,149 +23,149 @@
                                 {{ form.as_p }} 
                             </div>-->
 
+                            
 
                             <div class="row">
                                 <div class="col-sm-12">
-                                    
-
-                                    <!--<div class="mb-3">
+                 
+                                    <div class="mb3-mobile">
+                                        <label for="{{ form.EmployeeID.id_for_label }}" class="form-label">Employee</label>
+                                        {% render_field form.EmployeeID type="date" class="form-control" %}
+                                        <div class="invalid-feedback">{{ form.EmployeeID.errors|first }}</div>
+                                    </div>    
+                                </div>
+                            </div> 
+                            <div class="row">
+                                <div class="col-sm-12">
+                 
+                                    <div class="mb3-mobile">
                                         <label for="{{ form.date.id_for_label }}" class="form-label">Date</label>
                                         {% render_field form.date type="date" class="form-control" %}
                                         <div class="invalid-feedback">{{ form.date.errors|first }}</div>
-                                    </div>-->
+                                    </div>    
                                 </div>
-                            </div>
+                            </div> 
                             <div class="row">
-                                <div class="col-sm-8">
-                                    <div class="mb-3">
-                                        <label for="{{ form.start_time.id_for_label }}" class="form-label">Clock In</label>
-                                        {% render_field form.start_time class="form-control" name="start_time" id="start_time" placeholder="E.g. 800" onchange='setTime()' %}                                        
+                                <div class="col-sm-12">
+                                                                   
+                                        <label for="{{ form.start_time.id_for_label }}" class="form-label">Clock In</label>                                                                           
+                                        {% render_field form.start_time class="form-control" name="start_time" id="start_time" placeholder="E.g. 800" onchange='validateInputs(this)' %}                                                                             
                                         <div class="invalid-feedback">{{ form.start_time.errors|first }}</div>
-                                        <p id="start_time_text" style="color:darkblue">  </p>
-                                    </div>
+                                        <label id="start_time_text" class="info-text" >  </label>   
                                 </div>
                             </div>
                             
                             <div class="row">
-                                <div class="col-sm-4">
-                                    <div class="mb-3">
+                                <div class="col-sm-6">
+                                    <div class="mb3-mobile">
                                         <label for="{{ form.start_lunch_time.id_for_label }}" class="form-label">Lunch Start</label>
-                                        {% render_field form.start_lunch_time class="form-control" name="start_lunch_time" id="start_lunch_time" placeholder="E.g. 1200" onchange='setTime(this)'  %}
+                                        {% render_field form.start_lunch_time class="form-control" name="start_lunch_time" id="start_lunch_time" placeholder="E.g. 1200" onchange='validateInputs(this)'  %}
                                         <div class="invalid-feedback">{{ form.start_lunch_time.errors|first }}</div>
-                                        <p id="start_lunch_time_text" style="color:darkblue"></p> 
+                                        <label id="start_lunch_time_text" class="info-text" ></label> 
+                                    </div>
+                                </div>
+                            
+                                <div class="col-sm-6">
+                                    <div class="mb3-mobile">
+                                        <label for="{{ form.end_lunch_time.id_for_label }}" class="form-label">Lunch End</label>
+                                        {% render_field form.end_lunch_time class="form-control" name="end_lunch_time" id="end_lunch_time" placeholder="E.g. 1400" onchange='validateInputs(this)'%}
+                                        <div class="invalid-feedback">{{ form.end_lunch_time.errors|first }}</div>
+                                        <label id="end_lunch_time_text" class="info-text"  ></label>
                                     </div>
                                 </div>
                             </div>
+
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="mb3-mobile">
+                                        <label for="{{ form.end_time.id_for_label }}" class="form-label">Clock Out</label>
+                                        {% render_field form.end_time class="form-control" name="end_time" id="end_time" placeholder="E.g. 1700" onchange='validateInputs(this)' %}
+                                        <div class="invalid-feedback">{{ form.end_time.errors|first }}</div>
+                                        <label id="end_time_text" class="info-text" ></label>
+                                    </div>
+                                </div>
+                            </div>
+
                             
+
                             <div class="row">
                                 <div class="col-sm-4">
-                                    <div class="mb-3">
-                                        <label for="{{ form.end_lunch_time.id_for_label }}" class="form-label">Lunch End</label>
-                                        {% render_field form.end_lunch_time class="form-control" name="end_lunch_time" id="end_lunch_time" placeholder="E.g. 1400" onchange='setTime(this)'%}
-                                        <div class="invalid-feedback">{{ form.end_lunch_time.errors|first }}</div>
-                                        <p id="end_lunch_time_text" style="color:darkblue"></p>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div class="row">
-                                <div class="col-sm-8">
-                                    <div class="mb-3">
-                                        <label for="{{ form.end_time.id_for_label }}" class="form-label">Clock Out</label>
-                                        {% render_field form.end_time class="form-control" name="end_time" id="end_time" placeholder="E.g. 1700" onchange='setTime(this)' %}
-                                        <div class="invalid-feedback">{{ form.end_time.errors|first }}</div>
-                                        <p id="end_time_text" style="color:darkblue"></p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            
-
-                            <div class="row">
-                                <div class="col-sm-8">
-                                    <div class="mb-3">
+                                    <div class="mb3-mobile">
                                         <label for="{{ form.start_mileage.id_for_label }}" class="form-label">Starting Mileage</label>
-                                        {% render_field form.start_mileage class="form-control" name="start_mileage" id="start_mileage" placeholder="E.g. 999 mi" onchange='setMilleage(this)'  %}
+                                        {% render_field form.start_mileage class="form-control" name="start_mileage" id="start_mileage" placeholder="E.g. 1000" onchange='setMilleage(this)'  %}
                                         <div class="invalid-feedback">{{ form.start_mileage.errors|first }}</div>
-                                        <p id="start_mileage_text" style="color:darkblue;"></p>
+                                        <label id="start_mileage_text" class="error-text"></label>
                                     </div>
-                                </div>
-                            </div>
-
-                            
-
-                            <div class="row">
-                                <div class="col-sm-8">
-                                    <div class="mb-3">
+                                </div>                           
+                                <div class="col-sm-4">
+                                    <div class="mb3-mobile">
                                         <label for="{{ form.start_mileage.id_for_label }}" class="form-label">Ending Mileage</label>
-                                        {% render_field form.start_mileage class="form-control" name="end_mileage" id="end_mileage" placeholder="E.g. 999 mi" onchange='setMilleage(this)' %}
+                                        {% render_field form.end_mileage class="form-control" name="end_mileage" id="end_mileage" placeholder="E.g. 1200" onchange='setMilleage(this)' %}
                                         <div class="invalid-feedback">{{ form.start_mileage.errors|first }}</div>
-                                        <p id="end_mileage_text" style="color:darkblue;"></p>
+                                        <label id="end_mileage_text" class="error-text"></label>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-sm-8">
-                                    <div class="mb-3">
+                            
+                                <div class="col-sm-4">
+                                    <div class="mb3-mobile">
                                         <label for="{{ form.total_mileage.id_for_label }}" class="form-label">Total Mileage</label>
                                         {% render_field form.total_mileage class="form-control" name="total_mileage" id="total_mileage" %}
                                         <div class="invalid-feedback">{{ form.total_mileage.errors|first }}</div>
                                        
                                     </div>
                                 </div>
-                            </div>
+                            </div> 
 
                             <div class="row">
-                                <div class="col-sm-8">
-                                    <div class="mb-3">
+                                <div class="col-sm-6">
+                                    <div class="mb3-mobile">
                                         <label for="{{ form.Location.id_for_label }}" class="form-label">Location</label>
                                         {% render_field form.Location class="form-control" name="Location" id="Location" %}
                                         <div class="invalid-feedback">{{ form.Location.errors|first }}</div>
                                        
                                     </div>
-                                </div>
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-sm-8">
-                                    <div class="mb-3">
+                                </div>                           
+                                <div class="col-sm-6">
+                                    <div class="mb3-mobile">
                                         <label for="{{ form.Status.id_for_label }}" class="form-label">Status</label>
-                                        {% render_field form.Status class="form-control" %}
+                                        <input type="text" id="newstatus" name="newstatus" minlength="4" maxlength="8" size="10" hidden/>
+                                        {% render_field form.Status class="form-control" name="estatus" id="estatus" %}
                                         <div class="invalid-feedback">{{ form.Status.errors|first }}</div>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="row">
-                                <div class="col-sm-8">
-                                    <div class="mb-3">
+                                <div class="col-sm-6">
+                                    <div class="mb3-mobile">
                                         <label for="{{ form.created_date.id_for_label }}" class="form-label">Created Date</label>
                                         {% render_field form.created_date class="form-control" %}
                                         <div class="invalid-feedback">{{ form.created_date.errors|first }}</div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="row">                               
-                                <div class="col-sm-12">  
-                                    <div class="mb-3">                              
-                                        <label>Updated Date</label>
-                                        {% render_field form.updated_date class="form-control" %}  
+                                                        
+                                <div class="col-sm-6">  
+                                    <div class="mb3-mobile">                              
+                                        <label for="{{ form.updated_date.id_for_label }}" class="form-label">updated Date</label>
+                                        {% render_field form.updated_date class="form-control" %}
                                         <div class="invalid-feedback">{{ form.updated_date.errors|first }}</div>
                                     </div>                                                                     
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-6">  
-                                    <div class="form-outline" style="align-items: center;">                                       
-                                        <!-- <input type="submit" value="Save"> -->
+                                <div class="col-sm-12">  
+                                    <div class="form-outline py-5" style="align-items: center;">                                       
+                                      
                                         <input class="btn btn-primary" name = "save_btn" id = "save_btn" type="submit" value="Save">
                                         
-                                     
-                                            <a class="btn btn-success"  href="/timesheet/update_status/{{id}}/2" role="button">Send</a>      
-                                                            
+                                        <!--<a class="btn btn-success send-btn"  href="/timesheet/update_status/{{id}}/2" role="button">Send</a>  -->    
+                                        
+                                        {% if obj.id > 0 and  obj.Status != 4 %}
+                                            <a class = "btn btn-success" href="" onClick="updateStatus(this, 4, 'Are you sure to Approve this Timesheet')">approve</a>    
+                                            <a class = "btn btn-warning" href="" onClick="updateStatus(this, 5, 'Are you sure to Approve this Timesheet')">Reject</a>               
+                                        {%endif%}
+
                                         <a class="btn btn-danger" href="/timesheet/supervisor_list" role="button">Close</a>
                                     </div>
                                 </div>
@@ -177,4 +176,5 @@
         </div>      
     </form>
 </div>
+
 {% endblock %}
