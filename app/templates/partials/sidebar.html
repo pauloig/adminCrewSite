@@ -9,14 +9,16 @@
 </style>
 
 <nav id="sidebar">
+  <img src="{% static 'media/hglogo-transparent.png'%}" alt="Logo HG" width="300px;"/>
+  <a href="/home/" class="logo">   </a>
     <div class="custom-menu">
       <button type="button" id="sidebarCollapse" class="btn btn-primary">
       <i class="fa fa-bars"></i>
       <span class="sr-only">Toggle Menu</span>
       </button>
     </div>
-    <div class="p-3 pt-5">
-      <h1><a href="/home/" class="logo">  <img src="{% static 'media/hglogo-transparent.png'%}" alt="" width="150px;"/> </a></h1>
+    
+    <div class="p-3 pt-5">      
       <ul class="list-unstyled components mb-5">
         <!--Catalog Menu-->
         {%if emp.is_admin or user.is_staff %}

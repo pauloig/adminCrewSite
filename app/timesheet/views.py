@@ -21,6 +21,18 @@ def employee_list(request):
 
     return render(request, "timesheet/employee_list.html", context)
 
+@login_required(login_url='/home/')
+def employee_submitted_list(request):
+    emp = catalogModel.Employee.objects.filter(user__username__exact = request.user.username).first()
+    context ={}
+
+    
+    context["dataset"] = Timesheet.objects.filter(EmployeeID = emp, Status__in = (2,3,4))
+    
+    context["emp"]= emp
+
+    return render(request, "timesheet/employee_submitted_list.html", context)
+
 
 
 @login_required(login_url='/home/')
@@ -33,6 +45,7 @@ def create(request):
     if form.is_valid():
         form.instance.createdBy = request.user.username
         form.instance.created_date = datetime.now()    
+        form.instance.total_mileage = form.instance.end_mileage - form.instance.start_mileage
         form.save()
         # Return to Locations List
         return HttpResponseRedirect('/timesheet/employee_list/')
@@ -49,12 +62,17 @@ def update(request, id):
     context ={}
 
     obj = get_object_or_404(Timesheet, id = id)
-    form = TimesheetForm(request.POST or None, instance = obj)
+
+    if int(obj.Status) >= 2 and int(obj.Status) <= 4:
+        form = TimesheetDisabledForm(request.POST or None, instance = obj)
+    else: 
+        form = TimesheetForm(request.POST or None, instance = obj)
 
     if form.is_valid():
         if request.POST.get('newstatus') != '' :
             form.instance.Status = request.POST.get('newstatus')
 
+        form.instance.total_mileage = form.instance.end_mileage - form.instance.start_mileage
         form.instance.updatedBy = request.user.username
         form.instance.updated_date = datetime.now()    
         form.save()

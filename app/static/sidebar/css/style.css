@@ -8254,6 +8254,15 @@ h1, h2, h3, h4, h5,
 .wrapper {
   width: 100%; }
 
+#sidebar img {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 2px;
+  background-color: white;
+  padding: 30px;
+  border-radius: 0;
+}
+
 #sidebar {
   min-width: 250px;
   max-width: 250px;
