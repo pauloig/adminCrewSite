@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from datetime import date, datetime
 
 class Location(models.Model):
-    LocationID = models.IntegerField(primary_key=True, serialize=False, verbose_name='ID')
+    LocationID = models.CharField(max_length=10,primary_key=True, serialize=False, verbose_name='ID')
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
     city = models.CharField(max_length=200, blank=True, null=True)
@@ -20,7 +20,7 @@ class Location(models.Model):
     updatedBy = models.CharField(max_length=60, blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        return str(self.LocationID) + " "+  self.name
 
 class Employee(models.Model):
     employeeID = models.IntegerField(primary_key=True, serialize=False, verbose_name='ID')

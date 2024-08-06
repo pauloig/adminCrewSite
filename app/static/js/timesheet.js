@@ -323,13 +323,23 @@
         event.preventDefault();
 
         console.log(document.getElementById("newstatus"));
-        if (confirm(msgAlert))
+
+        result = validateInputs(null);
+
+        console.log(result);
+
+        if (!result)
+            alert('Es necesario llenar los campos requeridos');
+        else
         {
-            document.getElementById("estatus").value = newS;
-            document.getElementById("newstatus").value = newS;
-            document.getElementById("Timesheet").submit();
+            if (confirm(msgAlert))
+                {
+                    document.getElementById("estatus").value = newS;
+                    document.getElementById("newstatus").value = newS;
+                    document.getElementById("Timesheet").submit();
+                }  
         }
-            
+           
     }
 
 }
