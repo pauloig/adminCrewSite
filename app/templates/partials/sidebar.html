@@ -29,7 +29,7 @@
                       <a href="/catalog/employee_list/"> <span class="fa fa-users"></span> Employees</a>
                   </li>    
                   <li>
-                    <a href="/catalog/location_list/"> <span class="fa fa-users"></span> Locations</a>
+                    <a href="/catalog/location_list/"> <span class="fa fa-location-pin"></span> Locations</a>
                   </li>   
                 </ul>
             </li>
@@ -40,14 +40,14 @@
               <a href="#homeSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><span class="fa fa-business-time"></span> Timesheet </a>
               <ul class="collapse list-unstyled" id="homeSubmenu2">
             
-                {%if emp.is_admin != True and emp.is_supervisor != True and user.is_staff != True %}
+                {%if emp.is_admin != True and emp.is_supervisor != True and user.is_staff != True and user.is_hr %}
                     <li class="active">
-                        <a href="/timesheet/employee_list/"><span class="fa fa-calendar-days"></span> List</a>
+                        <a href="/timesheet/employee_list/"><span class="fa fa-list"></span> List</a>
                     </li>     
                 {% endif %} 
                 {%if emp.is_admin or emp.is_supervisor or user.is_staff %}
                     <li class="active">
-                        <a href="/timesheet/supervisor_list/"><span class="fa fa-calendar-days"></span> List</a>
+                        <a href="/timesheet/supervisor_list/"><span class="fa fa-list"></span> List</a>
                     </li>     
                 {% endif %}           
               </ul>
@@ -55,20 +55,17 @@
         <!--Reports Menu-->
         
         <li>
-          <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Reports</a>
-          <ul class="collapse list-unstyled" id="pageSubmenu">
-            {%if emp.is_admin or emp.is_supervisor or user.is_staff %}
-                <li>
-                    <a href="#">By Employee</a>
-                </li>
-                <li>
-                    <a href="#">By Date</a>
-                </li>
-                <li>
-                    <a href="#">All</a>
-                </li>
-            {%endif%}
-          </ul>
+          {%if emp.is_admin or emp.is_hr or user.is_staff %}    
+            <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><span class="fa fa-list"></span>  Reports</a>
+            <ul class="collapse list-unstyled" id="pageSubmenu">
+                          
+                  <li>
+                    <a href="/timesheet/report_list/"><span class="fa fa-calendar-days"></span> By Date</a>
+                  </li>
+                  
+              
+            </ul>
+          {%endif%}
         </li>
         <li>
          

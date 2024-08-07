@@ -13,7 +13,7 @@ prodStatus_choice = (
     (1, 'Draft'),
     (2, 'Sent'),
     (3, 'Pending'),
-    (4, 'Aproved'),
+    (4, 'Approved'),
     (5, 'Rejected')
 )
 

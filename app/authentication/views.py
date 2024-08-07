@@ -12,9 +12,10 @@ def home(request):
     dic = {}    
     context = {}  
     emp = catalogModel.Employee.objects.filter(user__username__exact = request.user.username).first()
+    context["emp"] = emp
 
     if emp:       
-        if emp.is_admin or emp.is_supervisor or request.user.is_staff:
+        if emp.is_admin or emp.is_supervisor or emp.is_hr or request.user.is_staff:
             return render(
             request,
             'index.html',

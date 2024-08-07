@@ -321,25 +321,54 @@
     {
 
         event.preventDefault();
-
-        console.log(document.getElementById("newstatus"));
-
         result = validateInputs(null);
 
-        console.log(result);
+        const dateSelected = document.getElementById("date").value;
+        const Location = document.getElementById("Location").value;
+        message = 'Please fill the required fields ';
+        
+        if (dateSelected.toString().trim().length == 0)
+        {
+            result = false;
+            message = 'Please select a valid date';
+            console.log('Date not Selected')
+        }
+        else
+            console.log('date Selected: ',dateSelected);
 
+        if (Location.toString().trim().length == 0)
+        {
+            result = false;
+            message = 'Please select a valid Location';
+            console.log('Date not Selected')
+        }
+        else
+            console.log('Location Selected: ',Location);
+
+      
         if (!result)
-            alert('Es necesario llenar los campos requeridos');
+            alert(message);
         else
         {
             if (confirm(msgAlert))
+            {
+                if (newS > 0)
                 {
                     document.getElementById("estatus").value = newS;
                     document.getElementById("newstatus").value = newS;
                     document.getElementById("Timesheet").submit();
-                }  
+                }
+                else
+                {
+                    
+                    document.getElementById("Timesheet").submit();
+                }
+                
+            }  
+            
         }
-           
+
     }
+
 
 }

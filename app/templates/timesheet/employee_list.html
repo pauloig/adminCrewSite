@@ -77,8 +77,20 @@
                                                     <h3 class="my-1" style="font-size: 22px; font-weight: 600; color: #154a86; margin:0px;">{{data.date}}  </h3> 
                                                 </div>
                                                 
-                                                <span style="font-size: 15px; color: #828997; margin: 0px"><strong> {{data.total_hours}}</strong> hrs |  </span>
-                                                <span style="font-size: 15px; color: #828997; margin: 0px"><strong>{{data.total_mileage}}</strong> mi | </span>
+                                                <span style="font-size: 15px; color: #828997; margin: 0px"> 
+                                                    {%if data.total_hours == None %}
+                                                        <strong> 0</strong> hrs |
+                                                    {%else%}
+                                                        <strong> {{data.total_hours}}</strong> hrs |  
+                                                    {%endif%}
+                                                </span>
+                                                <span style="font-size: 15px; color: #828997; margin: 0px">
+                                                    {%if data.total_mileage == None %}
+                                                        <strong> 0</strong> mi |
+                                                    {%else%}
+                                                        <strong> {{data.total_mileage}}</strong> mi |  
+                                                    {%endif%}                                                    
+                                                  
                                                 <span style="font-size: 15px; color: #828997; margin: 0px"><strong>
                                                     {% if data.Status == 1 %} Draft
                                                     {% elif  data.Status == 2%} Sent

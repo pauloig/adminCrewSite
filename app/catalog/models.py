@@ -36,6 +36,7 @@ class Employee(models.Model):
     is_active = models.BooleanField(default=True)
     is_supervisor = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
+    is_hr = models.BooleanField(default=False)
     created_date = models.DateTimeField(null=True, blank=True)
     createdBy = models.CharField(max_length=60, blank=True, null=True)
     updated_date = models.DateTimeField(null=True, blank=True)
