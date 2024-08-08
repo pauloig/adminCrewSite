@@ -40,7 +40,7 @@
                  
                                     <div class="mb3-mobile">
                                         <label for="{{ form.date.id_for_label }}" class="form-label">Date</label>
-                                        {% render_field form.date type="date" class="form-control" %}
+                                        {% render_field form.date type="date" name="date" id="date" class="form-control" %}
                                         <div class="invalid-feedback">{{ form.date.errors|first }}</div>
                                     </div>    
                                 </div>
@@ -163,7 +163,7 @@
                                         
                                         {% if obj.id > 0 and  obj.Status != 4 %}
                                             <a class = "btn btn-success" href="" onClick="updateStatus(this, 4, 'Are you sure to Approve this Timesheet')">approve</a>    
-                                            <a class = "btn btn-warning" href="" onClick="updateStatus(this, 5, 'Are you sure to Approve this Timesheet')">Reject</a>               
+                                            <a class = "btn btn-warning" href="" onClick="updateStatus(this, 5, 'Are you sure to Reject this Timesheet')">Reject</a>               
                                         {%endif%}
 
                                         <a class="btn btn-danger" href="/timesheet/supervisor_list" role="button">Close</a>

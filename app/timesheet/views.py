@@ -59,6 +59,7 @@ def create(request):
             form.instance.total_mileage = 0
 
         form.instance.total_mileage = validate_decimals(validate_decimals(form.cleaned_data["end_mileage"]) - validate_decimals(form.cleaned_data["start_mileage"]))
+        form.instance.total_hours = calculate_hours(form.instance.start_time, form.instance.end_time, form.instance.start_lunch_time, form.instance.end_lunch_time)
         form.save() 
 
         # Return to Locations List
@@ -87,6 +88,7 @@ def update(request, id):
             form.instance.Status = request.POST.get('newstatus')
 
         form.instance.total_mileage = validate_decimals(validate_decimals(form.instance.end_mileage) - validate_decimals(form.instance.start_mileage))
+        form.instance.total_hours = calculate_hours(form.instance.start_time, form.instance.end_time, form.instance.start_lunch_time, form.instance.end_lunch_time)
         form.instance.updatedBy = request.user.username
         form.instance.updated_date = datetime.now()    
         form.save()
@@ -130,25 +132,34 @@ def update_status(request, id, status):
 def supervisor_list(request):
     emp = catalogModel.Employee.objects.filter(user__username__exact = request.user.username).first()
     context ={}
-    estatus = "0"
-
+    status = 0
+    dateS = ""
+    dateS2 = ""
     if request.method == "POST":
-        estatus = request.POST.get('status')
-       
-    
-    context["selectEstatus"] = estatus    
+        dateSelected =  request.POST.get('date')
+        dateSelected2 = request.POST.get('date2')
+        dateS = datetime.strptime(dateSelected, '%Y-%m-%d').date()
+        dateS2 = datetime.strptime(dateSelected2, '%Y-%m-%d').date()
+        status = request.POST.get('status')        
+        
+           
 
-    if estatus == "0":
-        ts = Timesheet.objects.filter(Status__in =  (2,3), Location = emp.Location)
+        if status == "0":
+            ts = Timesheet.objects.filter(Status__in = (2,3), date__range=[dateS, dateS2])
+        else:
+            ts = Timesheet.objects.filter(Status = status , date__range=[dateS, dateS2])   
     else:
-        ts = Timesheet.objects.filter(Status = estatus , Location = emp.Location)
-
-    
+        ts = Timesheet.objects.filter(Status__in = (2,3))
+        
+    context["emp"] = emp
     context["dataset"] = ts
-    
-    context["emp"]= emp
-
+    context["selectEstatus"] = status 
+    context["dateSelected"] =  dateS
+    context["dateSelected2"] =  dateS2
+        
     return render(request, "timesheet/supervisor_list.html", context)
+
+
 
 
 @login_required(login_url='/home/')
@@ -161,6 +172,8 @@ def createBySupervisor(request):
     if form.is_valid():
         form.instance.createdBy = request.user.username
         form.instance.created_date = datetime.now()    
+        form.instance.total_mileage = validate_decimals(validate_decimals(form.instance.end_mileage) - validate_decimals(form.instance.start_mileage))
+        form.instance.total_hours = calculate_hours(form.instance.start_time, form.instance.end_time, form.instance.start_lunch_time, form.instance.end_lunch_time)
         form.save()
         # Return to Locations List
         return HttpResponseRedirect('/timesheet/supervisor_list/')
@@ -186,6 +199,9 @@ def updateBySuper(request, id):
     
         if request.POST.get('newstatus') != '' :
                 form.instance.Status = request.POST.get('newstatus')
+
+        form.instance.total_mileage = validate_decimals(validate_decimals(form.instance.end_mileage) - validate_decimals(form.instance.start_mileage))
+        form.instance.total_hours = calculate_hours(form.instance.start_time, form.instance.end_time, form.instance.start_lunch_time, form.instance.end_lunch_time)
 
         form.instance.updatedBy = request.user.username
         form.instance.updated_date = datetime.now()    
@@ -265,12 +281,12 @@ def get_report_list(request, dateSelected, dateSelected2, status):
     dateS2 = datetime.strptime(dateSelected2, '%Y-%m-%d').date()
     
                               
-    ws.write_merge(3, 3, 0, 10, 'Employee Report ' + str(datetime.strftime(dateS, "%m/%d/%Y")) + ' - ' + str(datetime.strftime(dateS2, "%m/%d/%Y")),font_title2)   
+    ws.write_merge(3, 3, 0, 11, 'Employee Report ' + str(datetime.strftime(dateS, "%m/%d/%Y")) + ' - ' + str(datetime.strftime(dateS2, "%m/%d/%Y")),font_title2)   
 
 
                    
 
-    columns = ['Date', 'Name', 'Location', 'Clock In', 'Lunch Start','Lunch End','Clock Out', 'Starting Mileage','Ending Mileage','Total Mileage','Status' ] 
+    columns = ['Date', 'Name', 'Location', 'Clock In', 'Lunch Start','Lunch End','Clock Out','Total Hours', 'Starting Mileage','Ending Mileage','Total Mileage','Status' ] 
 
     for col_num in range(len(columns)):
         ws.write(row_num, col_num, columns[col_num], font_title) # at 0 row 0 column 
@@ -282,30 +298,33 @@ def get_report_list(request, dateSelected, dateSelected2, status):
         ts = Timesheet.objects.filter(date__range=[dateS, dateS2])
     else:
         ts = Timesheet.objects.filter(Status = status , date__range=[dateS, dateS2])
+
+             
        
     for item in ts:
         row_num += 1
         ws.write(row_num, 0, item.date.strftime("%m/%d/%Y"), font_style) # at 0 row 0 column 
-        ws.write(row_num, 1, str(item.EmployeeID.employeeID) + ' - ' + item.EmployeeID.first_name + ' ' + item.EmployeeID.last_name , font_style) # at 0 row 0 column  
+        ws.write(row_num, 1, item.EmployeeID.first_name + ' ' + item.EmployeeID.last_name , font_style) # at 0 row 0 column  
         ws.write(row_num,2, item.Location.LocationID + '-' + item.Location.name, font_style) # at 0 row 0 column        
         ws.write(row_num, 3, item.start_time, font_style)
         ws.write(row_num, 4, item.start_lunch_time, font_style)
         ws.write(row_num, 5, item.end_lunch_time, font_style)
         ws.write(row_num, 6, item.end_time, font_style)
-        ws.write(row_num, 7, item.start_mileage, font_style)
-        ws.write(row_num, 8, item.end_mileage, font_style)
-        ws.write(row_num, 9, item.total_mileage, font_style)
+        ws.write(row_num, 7, item.total_hours, font_style)
+        ws.write(row_num, 8, item.start_mileage, font_style)
+        ws.write(row_num, 9, item.end_mileage, font_style)
+        ws.write(row_num, 10, item.total_mileage, font_style)
 
         if item.Status == 1:
-            ws.write(row_num, 10, 'Draft', font_style)
+            ws.write(row_num, 11, 'Draft', font_style)
         elif item.Status == 2:
-            ws.write(row_num, 10, 'Sent', font_style)
+            ws.write(row_num, 11, 'Sent', font_style)
         elif item.Status == 3:
-            ws.write(row_num, 10, 'Pending', font_style)
+            ws.write(row_num, 11, 'Pending', font_style)
         elif item.Status == 4:
-            ws.write(row_num, 10, 'Approved', font_style)
+            ws.write(row_num, 11, 'Approved', font_style)
         elif item.Status == 5:
-            ws.write(row_num, 10, 'Rejected', font_style)
+            ws.write(row_num, 11, 'Rejected', font_style)
 
 
     ws.col(1).width = 12000
@@ -331,10 +350,57 @@ def get_report_list(request, dateSelected, dateSelected2, status):
     return response
 
 """
-****************  UTILIDADES *********************************
+****************  UTILITIES *********************************
 """
 def validate_decimals(value):
     try:
         return round(float(str(value)), 2)
     except:
        return 0
+    
+def calculate_hours(startTime, endTime, lunch_startTime, lunch_endTime):
+    
+    if startTime != None and endTime != None:
+        if startTime > endTime:
+            total = 0
+        else:
+            #convert to decimal
+            startTime = startTime/100
+            st_h = int(startTime) 
+            st_m = validate_decimals(startTime % 1)* 100
+            st_total = validate_decimals(st_h + validate_decimals(st_m / 60))
+            
+            endTime = endTime / 100
+            et_h = int(endTime) 
+            et_m = validate_decimals(endTime % 1)* 100
+            et_total = validate_decimals(et_h + validate_decimals(et_m / 60))
+            
+            total = et_total - st_total
+    else:
+        total = 0 
+    
+    if lunch_startTime != None and lunch_endTime != None:
+        lunch_startTime = lunch_startTime / 100
+        lunch_endTime = lunch_endTime / 100
+        
+        if lunch_startTime > lunch_endTime:
+            total_lunch = 0
+        elif lunch_startTime > endTime or lunch_endTime > endTime:
+            total_lunch = 0
+        else:
+            #convert to decimal
+            lst_h = int(lunch_startTime) 
+            lst_m = validate_decimals(lunch_startTime % 1) * 100
+            lst_total = validate_decimals(lst_h + validate_decimals(lst_m / 60))
+            
+            let_h = int(lunch_endTime) 
+            let_m = validate_decimals(lunch_endTime % 1)* 100
+            let_total = validate_decimals(let_h + validate_decimals(let_m / 60))
+            
+            total_lunch = let_total - lst_total
+    else:
+        total_lunch = 0
+    
+    endTotal = total - total_lunch
+
+    return endTotal
