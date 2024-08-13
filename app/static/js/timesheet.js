@@ -242,12 +242,13 @@
         
 
         
-        const startMileage = Number(document.getElementById("start_mileage").value)
-        const endMileage = Number(document.getElementById("end_mileage").value)
-        const totalMileage = document.getElementById("total_mileage")
-        let   startMileageText = document.getElementById("start_mileage_text")
-        let   endMileageText = document.getElementById("end_mileage_text")
+        const startMileage = Number(document.getElementById("start_mileage").value);
+        const endMileage = Number(document.getElementById("end_mileage").value);
+        const totalMileage = document.getElementById("total_mileage");
+        let   startMileageText = document.getElementById("start_mileage_text");
+        let   endMileageText = document.getElementById("end_mileage_text");
         let savebtn = document.getElementById("save_btn");
+        let totalHours = 0;
        
         
 
@@ -298,6 +299,10 @@
             document.getElementById('btn btn-success send-btn').style.display = 'none';
         else
             document.getElementsByClassName('btn btn-success send-btn').style.display = 'block';*/
+
+
+        totalHours = calculateHours(startTime, endTime, startLunchTime, endLunchTime);
+        document.getElementById("total_hours").value = totalHours;
     
         return isValid;
     }
@@ -368,6 +373,72 @@
             
         }
 
+    }
+
+
+    function validateDecimals(value) {
+        try {
+            return parseFloat(value.toString()).toFixed(2);
+        } catch (e) {
+            return 0;
+        }
+    }
+    
+    function calculateHours(startTime, endTime, lunchStartTime, lunchEndTime) {
+
+        
+
+        let total = 0;
+
+        if (parseFloat(startTime) > 0 && parseFloat(endTime) > 0 ) {
+            if (parseFloat(startTime) > parseFloat(endTime)) {
+                total = 0;
+            } else {
+                
+                // convertir a decimal
+                startTime = parseFloat(startTime) / 100;
+                
+                let st_h = Math.floor(startTime);
+                let st_m = parseFloat(startTime % 1) * 100;      
+                let st_total = parseFloat(st_h + parseFloat(st_m / 60));
+                
+
+                endTime = parseFloat(endTime) / 100;
+                let et_h = Math.floor(endTime);
+                let et_m = parseFloat(endTime % 1) * 100;
+                let et_total = parseFloat(et_h + parseFloat(et_m / 60));
+
+
+                total = et_total - st_total;
+            }
+        }
+    
+        let totalLunch = 0;
+        if (parseFloat(lunchStartTime) > 0  && parseFloat(lunchEndTime) > 0) {
+            lunchStartTime = parseFloat(lunchStartTime) / 100;
+            lunchEndTime = parseFloat(lunchEndTime) / 100;
+    
+            if (lunchStartTime > lunchEndTime) {
+                totalLunch = 0;
+            } else if (lunchStartTime > endTime || lunchEndTime > endTime) {
+                totalLunch = 0;
+            } else {
+                // convertir a decimal
+                let lst_h = Math.floor(lunchStartTime);
+                let lst_m = parseFloat(lunchStartTime % 1) * 100;
+                let lst_total = parseFloat(lst_h + parseFloat(lst_m / 60));
+    
+                let let_h = Math.floor(lunchEndTime);
+                let let_m = parseFloat(lunchEndTime % 1) * 100;
+                let let_total = parseFloat(let_h + parseFloat(let_m / 60));
+    
+                totalLunch = let_total - lst_total;
+            }
+        }
+    
+        let endTotal = total - totalLunch;
+        console.log('Total: ', parseFloat(endTotal).toFixed(2));
+        return parseFloat(endTotal).toFixed(2);
     }
 
 

@@ -1,8 +1,9 @@
 {% extends 'index.html' %} 
 {%load static%}
-{% block title %} Duplicate Order List {% endblock %} 
 
 {% block container %}
+
+<script src="{% static 'js/supervisor.js' %}"></script>
 
 <div class="container">
     <form method='post' enctype="multipart/form-data">
@@ -20,7 +21,7 @@
                     <h6 class="card-header card-header-wc" >Filters</h6>
                     <div class="card-body">
                         <div class="row">                   
-                            <div class="col-lg-3">  
+                            <div class="col-lg-2">  
                                 <div class="mb-3">    
                                     <label for="PID" class="form-label">Status</label>                
                                     <div class="input-group mb-3">   
@@ -31,12 +32,7 @@
                                                 <option value ="0"  selected >Status</option>
                                             {%else%}
                                                 <option value ="0" >Status</option>
-                                            {%endif%}
-                                            {%if selectEstatus == "1"%} 
-                                                <option value ="1"  selected >Draft</option>
-                                            {%else%}
-                                                <option value ="1" >Draft</option>
-                                            {%endif%}
+                                            {%endif%}                                            
                                             
                                             {%if selectEstatus == "2"%}
                                                 <option value="2" selected>Sent</option>
@@ -49,9 +45,9 @@
                                                 <option value="3" >Pending</option>
                                             {%endif%}
                                             {%if selectEstatus == "4"%}
-                                                <option value="4" selected>Aproved</option>
+                                                <option value="4" selected>Approved</option>
                                             {%else%}
-                                                <option value="4">Aproved</option>
+                                                <option value="4">Approved</option>
                                             {%endif%}   
                                             {%if selectEstatus == "5"%}
                                                 <option value="5" selected>Rejected</option>
@@ -82,7 +78,27 @@
                                     </div>       
                                 </div>               
                             </div> 
-                            <div class="col-lg-2 my-4">
+                            <div class="col-lg-3">                                                              
+                                <label for="PID" class="form-label">Location</label>                
+                                <div class="input-group mb-3"> 
+                                    <select class="form-select" aria-label="Select Location" name="location" id="location">                                    
+                                       
+                                        {%if selectLoc == "0" %}
+                                            <option value ="0" selected>Select a Location</option>
+                                        {%else%}
+                                            <option value ="0">Select a Location</option>
+                                        {%endif%}
+                                        {% for data in location %}
+                                            {%if data.LocationID|slugify == selectLoc%}                              
+                                                <option value="{{data.LocationID}}" selected>{{data.name}}</option>
+                                            {%else%}
+                                                <option value="{{data.LocationID}}">{{data.name}}</option>
+                                            {%endif%}
+                                        {% endfor %}    
+                                    </select>     
+                                </div>                              
+                            </div>
+                            <div class="col-lg-1 my-4">
                                 <input class="btn btn-primary" type="submit" value="Search"> 
                             </div>
                             <div class="col-sm-2 my-4">
@@ -91,11 +107,7 @@
                             </div>  
                                                
                         
-                            <div class="col-lg-4">                                                              
-                                <div class="form-outline" style="align-items: center;">
-                                    
-                                </div>
-                            </div>
+                            
                             
                         </div>
                     </div>
@@ -118,25 +130,26 @@
                             <table id="orders" class="table table-sm table-bordered table-striped">
                                     <thead class="table-primary">
                                         <tr>
-                                            <th scope="col" style="width: 10%">Date</th>
-                                            <th scope="col" style="width: 20%">Name</th>
-                                            <th scope="col" style="width: 20%">Location</th>
-                                            <th scope="col" style="width: 10%">Clock In</th>
-                                            <th scope="col" style="width: 10%">Lunch Start</th>
-                                            <th scope="col" style="width: 10%">Lunch End</th>
-                                            <th scope="col" style="width: 10%">Clock Out</th>
-                                            <th scope="col" style="width: 10%">Total Hours</th>
-                                            <th scope="col" style="width: 10%">Starting Mileage</th>
-                                            <th scope="col" style="width: 10%">Ending Mileage</th>
-                                            <th scope="col" style="width: 10%">Total Mileage</th>
-                                            <th scope="col" style="width: 10%">Status</th>            
-                                            <th scope="col" style="width: 3%"></th>
+                                            <th scope="col" style="width: 6%">Date</th>
+                                            <th scope="col" style="width: 10%">Name</th>
+                                            <th scope="col" style="width: 10%">Location</th>
+                                            <th scope="col" style="width: 5%">Clock In</th>
+                                            <th scope="col" style="width: 5%">Lunch Start</th>
+                                            <th scope="col" style="width: 5%">Lunch End</th>
+                                            <th scope="col" style="width: 5%">Clock Out</th>
+                                            <th scope="col" style="width: 5%">Hours worked</th>
+                                            <th scope="col" style="width: 6%">Starting Mileage</th>
+                                            <th scope="col" style="width: 6%">Ending Mileage</th>
+                                            <th scope="col" style="width: 6%">Total Mileage</th>
+                                            <th scope="col" style="width: 4%">Status</th>     
+                                            <th scope="col" style="width: 4%">Updated By</th>          
+                                            <th scope="col" style="width: 5%"></th>
                                         </tr>              
                                     </thead>
                                     <tbody>                                       
                                         {% for data in dataset %}
                                             <tr>
-                                                <td>{{data.date}}</td>  
+                                                <td>{{data.date|date:'Y-m-d'}}</td>  
                                                 <td>{{data.EmployeeID}}</td>
                                                 <td>{{data.Location}}</td> 
                                                 <td>{{data.start_time}}</td>
@@ -144,7 +157,6 @@
                                                 <td>{{data.end_lunch_time}}</td>
                                                 <td>{{data.end_time}}</td>   
                                                 <td>{{data.total_hours}}</td>   
-
                                                 <td>{{data.start_mileage}}</td> 
                                                 <td>{{data.end_mileage}}</td> 
                                                 <td>{{data.total_mileage}}</td> 
@@ -152,13 +164,22 @@
                                                     {% if data.Status == 1 %} Draft
                                                     {% elif  data.Status == 2%} Sent
                                                     {% elif  data.Status == 3%} Pending
-                                                    {% elif  data.Status == 4%} Aproved
+                                                    {% elif  data.Status == 4%} Approved
                                                     {% elif  data.Status == 5%} Rejected
                                                     {% endif %}
-                                                </td>    
-                                                <td>                      
-                                                    <a href="/timesheet/update_by_super/{{data.id}}"><i class="fa-solid fa-pen-to-square" style="color: green;"></i></a>
+                                                </td> 
+                                                <td>{{data.updatedBy}}</td>
+                                                <td class="text-justify">
+                                                    {% if data.Status == 2%}
+                                                        <!--<a href="/timesheet/update_status/{{data.id}}/5" data-bs-toggle="tooltip" data-bs-placement="top" title="Reject"><i class="fa-solid fa-x mr-1" style="color: red;"></i></a>-->
+                                                        
+                                                        <a href="" onClick="ApproveReject(this, 4,{{data.id}}, 'Are you sure to Approve this Timesheet')" data-bs-toggle="tooltip" data-bs-placement="top" title="Approve"><i class="fa-solid fa-check mr-1" style="color: green;"></i></a>
+                                                        <a hx-get="/timesheet/reject_timesheet/{{data.id}}" hx-target="#dialog" ><i class="fa-solid fa-x mr-1" style="color: red;"></i></a>
+                                                        <!--<a href="" onClick="ApproveReject(this, 5,{{data.id}}, 'Are you sure to Reject this Timesheet')" data-bs-toggle="tooltip" data-bs-placement="top" title="Reject"><i class="fa-solid fa-x mr-1" style="color: red;"></i></a>-->
+                                                    {%endif%}
+                                                    <a href="/timesheet/update_by_super/{{data.id}}" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit"><i class="fa-solid fa-pen-to-square mr-1" style="color: blue;"></i></a>
                                                 </td>
+                                                 
                                             </tr>                                             
                                         {% endfor %}
                                     </tbody>                              

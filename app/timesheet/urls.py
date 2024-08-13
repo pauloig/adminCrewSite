@@ -15,7 +15,8 @@ urlpatterns = [
      path('create_by_supervisor/',views.createBySupervisor),
      path('update_by_super/<id>',views.updateBySuper),
      path('update_status/<id>/<status>',views.update_status),
+     path('reject_timesheet/<id>',views.reject_timesheet),
      # ****** Reports **********************
      path('report_list/',views.report_list), 
-     path('get_report_list/<dateSelected>/<dateSelected2>/<status>',views.get_report_list),
+     path('get_report_list/<dateSelected>/<dateSelected2>/<status>/<location>',views.get_report_list),
 ]

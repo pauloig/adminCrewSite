@@ -37,9 +37,7 @@
     <link rel="stylesheet" href="{% static 'css/general.css' %} ">
     <link rel="stylesheet" href="{% static 'sidebar/css/style.css' %} ">
 
-    {% load pwa %}
 
-    {% progressive_web_app_meta %}
 
 
 </head>
@@ -68,6 +66,13 @@
   </div>
 
   {% include 'partials/footer.html' %}
+
+   <!-- Modal -->
+   <div id="modal" class="modal fade" tabindex="-1">
+    <div id ="dialog" class="modal-dialog modal-dialog-scrollable modal-xl">
+
+    </div>
+  </div>
  
 <script src="{% static 'sidebar/js/jquery.min.js' %}"></script>
 <script src="{% static 'sidebar/js/popper.js' %}"></script>
@@ -105,6 +110,16 @@ integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxV
 <script>
   $("#orders").DataTable();  
   $("#orders2").DataTable();  
+
+  (function(){
+    const modal = new bootstrap.Modal(document.getElementById('modal'))
+
+    htmx.on('htmx:afterSwap', (e) =>{
+      if (e.detail.target.id === "dialog")
+        modal.show()
+    })
+
+  })()
 </script>
 
 </body>

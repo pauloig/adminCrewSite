@@ -33,6 +33,7 @@ class Timesheet(models.Model):
     total_mileage = models.IntegerField(null=True, blank=True)
     Status = models.IntegerField(default=1, choices = prodStatus_choice)   
     Location = models.ForeignKey(catalogModel.Location, on_delete=models.CASCADE, db_column ='Location', null=False, blank=False)  
+    comments = models.CharField(max_length=200, blank=True, null=True)
     created_date = models.DateTimeField(null=True, blank=True)
     createdBy = models.CharField(max_length=60, blank=True, null=True)
     updated_date = models.DateTimeField(null=True, blank=True)

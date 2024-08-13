@@ -3859,7 +3859,7 @@ input[type="button"].btn-block {
   margin-left: 1.25rem; }
 
 .card-header {
-  padding: 0.75rem 1.25rem;
+  padding: 0.2rem 0.3rem;
   margin-bottom: 0;
   background-color: rgba(0, 0, 0, 0.03);
   border-bottom: 1px solid rgba(0, 0, 0, 0.125); }

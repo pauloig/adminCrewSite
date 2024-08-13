@@ -40,22 +40,20 @@
         <div class="row pl-0 pr-0">
             <div class="col-sm-12 my-0 px-0">
                 <div class="card">
-                    <div class="card-header card-header-wc">   
-                        <div class="position-relative py-2 px-4" >                     
-                            <a href="/logout/" class="position-absolute top-50 start-0 translate-middle"><i class="fa fa-arrow-left fa-l mx-0.5" style="color:red;" ></i> </a>    
-                            <span class="position-absolute top-50 start-50 translate-middle"> Timesheet List </span>
-                            <a href="/timesheet/create/" class="position-absolute top-50 start-100 translate-middle"><i class="fa-regular fa-square-plus  mx-0.5" style="color:lime;" ></i></a>                                
-                        </div>                    
-                    </div>  
-                    <!--<div class="card-header text-center py-1">
-                        <div class="row align-items-center">
-                            <div class="col-sm-12 pt-1 pb-0">
-                                <h6 class="mb-0 hell" >Timesheet List  </h6>
-                                <a href="/timesheet/create/"><i class="fa-regular fa-square-plus fa-l mx-0.5 fright pt-3" style="color: white;"></i> </a>   
+                    <div class="card-header-2 card-header-wc">  
+                        
+                        <div class="d-flex justify-content-between">
+                            <div class="p-2"> 
+                                <a href="/logout/"><i class="fa fa-arrow-left fa-xl mx-0.5 pt-2" style="color:blue;" ></i> </a>  
                             </div>
-                           
+                            <div class="p-2"><img src="{% static 'media/hglogo-transparent.png'%}" alt="Logo HG" width="90px;"/></div>
+                            <div class="p-2">                                                              
+                                <a href="/timesheet/create/" ><i class="fa fa-square-plus fa-xl mx-0.5 pt-2" style="color:blue;" ></i></a>  
+                            </div>
                         </div>
-                    </div> -->
+                                      
+                    </div>  
+                    
                     <div class="card-footer p-0" align="center">
                         <a type="button" class="btn btn-light hell m-0"  aria-haspopup="true" aria-expanded="false" style="width:50%"><font size="2" muted>Not Completed</font>
                         </a>
@@ -95,7 +93,7 @@
                                                     {% if data.Status == 1 %} Draft
                                                     {% elif  data.Status == 2%} Sent
                                                     {% elif  data.Status == 3%} Pending
-                                                    {% elif  data.Status == 4%} Aproved
+                                                    {% elif  data.Status == 4%} Approved
                                                     {% elif  data.Status == 5%} Rejected
                                                     {% endif %}
                                                 </strong> 

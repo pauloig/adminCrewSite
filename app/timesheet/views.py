@@ -102,28 +102,6 @@ def update(request, id):
     return render(request, "timesheet/timesheet.html", context)
 
 
-
-@login_required(login_url='/home/')
-def update_status(request, id, status):
-    emp = catalogModel.Employee.objects.filter(user__username__exact = request.user.username).first()
-    context ={}
-
-    obj = get_object_or_404(Timesheet, id = id)
-    
-    if obj:
-        obj.updatedBy = request.user.username
-        obj.updated_date = datetime.now()    
-        obj.Status = status
-        obj.save()
-        # Return to Locations List
-        return HttpResponseRedirect('/timesheet/employee_list/')
-
-         
-    context["emp"] = emp
-    context["id"] = id
-    return render(request, "timesheet/timesheet.html/" + str(id), context)
-
-
 """
 **************** SUPERVISOR *********************************
 """
@@ -135,27 +113,42 @@ def supervisor_list(request):
     status = 0
     dateS = ""
     dateS2 = ""
+    loc = "0"
+
+    locationList = catalogModel.Location.objects.all()
+
     if request.method == "POST":
         dateSelected =  request.POST.get('date')
         dateSelected2 = request.POST.get('date2')
         dateS = datetime.strptime(dateSelected, '%Y-%m-%d').date()
         dateS2 = datetime.strptime(dateSelected2, '%Y-%m-%d').date()
         status = request.POST.get('status')        
-        
+        loc = request.POST.get('location') 
+        if loc == None or loc =="":
+            loc = "0"
            
-
-        if status == "0":
+        if status == "0" and loc == "0":
             ts = Timesheet.objects.filter(Status__in = (2,3), date__range=[dateS, dateS2])
         else:
-            ts = Timesheet.objects.filter(Status = status , date__range=[dateS, dateS2])   
+            if status != "0" and loc != "0":
+                ts = Timesheet.objects.filter(Status = status, Location__LocationID = loc, date__range=[dateS, dateS2])  
+            else:
+                if status != "0":    
+                    ts = Timesheet.objects.filter(Status = status , date__range=[dateS, dateS2])                     
+                else:
+                    ts = Timesheet.objects.filter(Location__LocationID = loc , date__range=[dateS, dateS2])  
     else:
         ts = Timesheet.objects.filter(Status__in = (2,3))
         
     context["emp"] = emp
     context["dataset"] = ts
+    context["location"]=locationList
+    context["selectLoc"]=loc
     context["selectEstatus"] = status 
     context["dateSelected"] =  dateS
     context["dateSelected2"] =  dateS2
+
+
         
     return render(request, "timesheet/supervisor_list.html", context)
 
@@ -182,6 +175,26 @@ def createBySupervisor(request):
     context['form']= form
     context["emp"] = emp
     return render(request, "timesheet/supervisor_timesheet.html", context)
+
+@login_required(login_url='/home/')
+def update_status(request, id, status):
+    emp = catalogModel.Employee.objects.filter(user__username__exact = request.user.username).first()
+    context ={}
+
+    obj = get_object_or_404(Timesheet, id = id)
+    
+    if obj:
+        obj.updatedBy = request.user.username
+        obj.updated_date = datetime.now()    
+        obj.Status = status
+        obj.save()
+        # Return to Locations List
+        return HttpResponseRedirect('/timesheet/supervisor_list/')
+
+        
+    context["emp"] = emp
+    context["id"] = id
+    return render(request, "timesheet/timesheet.html/" + str(id), context)
 
 @login_required(login_url='/home/')
 def updateBySuper(request, id):
@@ -217,6 +230,27 @@ def updateBySuper(request, id):
     return render(request, "timesheet/supervisor_timesheet.html", context)
 
 
+def reject_timesheet(request, id):
+    emp = catalogModel.Employee.objects.filter(user__username__exact = request.user.username).first()
+    context ={}
+
+    obj = get_object_or_404(Timesheet, id = id)
+    form = TimesheetRejectedForm(request.POST or None, instance = obj)
+    
+    if form.is_valid():
+        form.instance.updatedBy = request.user.username
+        form.instance.updated_date = datetime.now()    
+        form.instance.Status = 5
+        form.save()
+        # Return to Locations List
+        return HttpResponseRedirect('/timesheet/supervisor_list/')
+
+    context['form']= form     
+    context["emp"] = emp
+    context["id"] = id
+    return render(request, "timesheet/reject_timesheet.html", context)
+
+
 """
 ****************  REPORTS *********************************
 """
@@ -227,32 +261,52 @@ def report_list(request):
     emp = catalogModel.Employee.objects.filter(user__username__exact = request.user.username).first()
     context["emp"]= emp
 
+    status = 0
+    dateS = ""
+    dateS2 = ""
+    loc = "0"
+
+    locationList = catalogModel.Location.objects.all()
+
     if request.method == "POST":
         dateSelected =  request.POST.get('date')
         dateSelected2 = request.POST.get('date2')
         dateS = datetime.strptime(dateSelected, '%Y-%m-%d').date()
         dateS2 = datetime.strptime(dateSelected2, '%Y-%m-%d').date()
-        status = request.POST.get('status')        
+        status = request.POST.get('status')    
+
+        loc = request.POST.get('location') 
+        if loc == None or loc =="":
+            loc = "0"    
         
            
 
-        if status == "0":
+        if status == "0" and loc == "0":
             ts = Timesheet.objects.filter(date__range=[dateS, dateS2])
         else:
-            ts = Timesheet.objects.filter(Status = status , date__range=[dateS, dateS2])
-
+            if status != "0" and loc != "0":
+                ts = Timesheet.objects.filter(Status = status, Location__LocationID = loc, date__range=[dateS, dateS2])  
+            else:
+                if status != "0":    
+                    ts = Timesheet.objects.filter(Status = status , date__range=[dateS, dateS2])                     
+                else:
+                    ts = Timesheet.objects.filter(Location__LocationID = loc , date__range=[dateS, dateS2])  
+    else:
+        ts = Timesheet.objects.filter(Status = -1)
         
-        context["dataset"] = ts
-        context["selectEstatus"] = status 
-        context["dateSelected"] =  dateS
-        context["dateSelected2"] =  dateS2
+    context["dataset"] = ts
+    context["location"]=locationList
+    context["selectLoc"]=loc
+    context["selectEstatus"] = status 
+    context["dateSelected"] =  dateS
+    context["dateSelected2"] =  dateS2
 
 
     return render(request, "timesheet/report_list.html", context)
 
 
 @login_required(login_url='/home/')
-def get_report_list(request, dateSelected, dateSelected2, status):
+def get_report_list(request, dateSelected, dateSelected2, status, location):
     
 
     wb = xlwt.Workbook(encoding='utf-8')
@@ -286,7 +340,7 @@ def get_report_list(request, dateSelected, dateSelected2, status):
 
                    
 
-    columns = ['Date', 'Name', 'Location', 'Clock In', 'Lunch Start','Lunch End','Clock Out','Total Hours', 'Starting Mileage','Ending Mileage','Total Mileage','Status' ] 
+    columns = ['Date', 'Name', 'Location', 'Clock In', 'Lunch Start','Lunch End','Clock Out','Hours worked', 'Starting Mileage','Ending Mileage','Total Mileage','Status' ] 
 
     for col_num in range(len(columns)):
         ws.write(row_num, col_num, columns[col_num], font_title) # at 0 row 0 column 
@@ -294,12 +348,26 @@ def get_report_list(request, dateSelected, dateSelected2, status):
 
     
     #ordenes = woInvoice.objects.filter(created_date__year = datetime.strftime(dateS, '%Y'), created_date__month = datetime.strftime(dateS, '%m'))
-    if status == "0":
+    """if status == "0":
         ts = Timesheet.objects.filter(date__range=[dateS, dateS2])
     else:
-        ts = Timesheet.objects.filter(Status = status , date__range=[dateS, dateS2])
+        ts = Timesheet.objects.filter(Status = status , date__range=[dateS, dateS2])"""
 
              
+
+    if status == "0" and location == "0":
+        ts = Timesheet.objects.filter(date__range=[dateS, dateS2])
+    else:
+        if status != "0" and location != "0":
+            ts = Timesheet.objects.filter(Status = status, Location__LocationID = location, date__range=[dateS, dateS2])  
+        else:
+            if status != "0":    
+                ts = Timesheet.objects.filter(Status = status , date__range=[dateS, dateS2])                     
+            else:
+                ts = Timesheet.objects.filter(Location__LocationID = location , date__range=[dateS, dateS2])  
+    
+
+
        
     for item in ts:
         row_num += 1

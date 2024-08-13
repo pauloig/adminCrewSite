@@ -20,7 +20,7 @@
                     <h6 class="card-header card-header-wc" >Filters</h6>
                     <div class="card-body">
                         <div class="row">                   
-                            <div class="col-lg-3">  
+                            <div class="col-lg-2">  
                                 <div class="mb-3">    
                                     <label for="PID" class="form-label">Status</label>                
                                     <div class="input-group mb-3">   
@@ -49,9 +49,9 @@
                                                 <option value="3" >Pending</option>
                                             {%endif%}
                                             {%if selectEstatus == "4"%}
-                                                <option value="4" selected>Aproved</option>
+                                                <option value="4" selected>Approved</option>
                                             {%else%}
-                                                <option value="4">Aproved</option>
+                                                <option value="4">Approved</option>
                                             {%endif%}   
                                             {%if selectEstatus == "5"%}
                                                 <option value="5" selected>Rejected</option>
@@ -81,14 +81,34 @@
                                             min="1997-01-01" max="2030-12-31" class="form-control" required>
                                     </div>       
                                 </div>               
-                            </div>               
+                            </div>       
+                            <div class="col-lg-2">                                                              
+                                <label for="PID" class="form-label">Location</label>                
+                                <div class="input-group mb-3"> 
+                                    <select class="form-select" aria-label="Select Location" name="location" id="location">                                    
+                                       
+                                        {%if selectLoc == "0" %}
+                                            <option value ="0" selected>Select a Location</option>
+                                        {%else%}
+                                            <option value ="0">Select a Location</option>
+                                        {%endif%}
+                                        {% for data in location %}
+                                            {%if data.LocationID|slugify == selectLoc%}                              
+                                                <option value="{{data.LocationID}}" selected>{{data.name}}</option>
+                                            {%else%}
+                                                <option value="{{data.LocationID}}">{{data.name}}</option>
+                                            {%endif%}
+                                        {% endfor %}    
+                                    </select>     
+                                </div>                              
+                            </div>        
                             <div class="col-lg-3 my-4">
                                 <input class="btn btn-primary" type="submit" value="Search"> 
                                 {%if dateSelected%}
-                                    <a class="btn btn-primary" href="/timesheet/get_report_list/{{dateSelected|date:'Y-m-d'}}/{{dateSelected2|date:'Y-m-d'}}/{{selectEstatus}}" role="button">Download</a>
+                                    <a class="btn btn-primary" href="/timesheet/get_report_list/{{dateSelected|date:'Y-m-d'}}/{{dateSelected2|date:'Y-m-d'}}/{{selectEstatus}}/{{selectLoc}}" role="button">Download</a>
                                 {%endif%}  
                             </div>
-                            <div class="col-lg-2 my-4">
+                            <div class="col-lg-1 my-4">
                                 <a href="/home/" type="button" class="btn btn-danger">Close</a> 
                             </div>  
                                                
@@ -123,7 +143,7 @@
                                         <th scope="col" style="width: 10%">Lunch Start</th>
                                         <th scope="col" style="width: 10%">Lunch End</th>
                                         <th scope="col" style="width: 10%">Clock Out</th>
-                                        <th scope="col" style="width: 10%">Total Hours</th>
+                                        <th scope="col" style="width: 10%">Hours worked</th>
                                         <th scope="col" style="width: 10%">Starting Mileage</th>
                                         <th scope="col" style="width: 10%">Ending Mileage</th>
                                         <th scope="col" style="width: 10%">Total Mileage</th>
@@ -149,7 +169,7 @@
                                                 {% if data.Status == 1 %} Draft
                                                 {% elif  data.Status == 2%} Sent
                                                 {% elif  data.Status == 3%} Pending
-                                                {% elif  data.Status == 4%} Aproved
+                                                {% elif  data.Status == 4%} Approved
                                                 {% elif  data.Status == 5%} Rejected
                                                 {% endif %}
                                             </td>    
