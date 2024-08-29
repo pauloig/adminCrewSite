@@ -18,5 +18,5 @@ urlpatterns = [
      path('reject_timesheet/<id>',views.reject_timesheet),
      # ****** Reports **********************
      path('report_list/',views.report_list), 
-     path('get_report_list/<dateSelected>/<dateSelected2>/<status>/<location>',views.get_report_list),
+     path('get_report_list/<dateSelected>/<dateSelected2>/<status>/<location>/<employee>',views.get_report_list),
 ]

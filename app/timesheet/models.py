@@ -42,6 +42,6 @@ class Timesheet(models.Model):
     def __str__(self):
         return  str(self.date)
     
-    #class Meta:
-    #    unique_together = ('EmployeeID',date)
+    class Meta:
+        unique_together = ('EmployeeID','date')
     #COnsultar cuantas veces puede enviar el empleado información al dia

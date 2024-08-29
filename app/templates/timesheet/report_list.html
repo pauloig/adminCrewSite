@@ -20,7 +20,7 @@
                     <h6 class="card-header card-header-wc" >Filters</h6>
                     <div class="card-body">
                         <div class="row">                   
-                            <div class="col-lg-2">  
+                            <div class="col-lg-1">  
                                 <div class="mb-3">    
                                     <label for="PID" class="form-label">Status</label>                
                                     <div class="input-group mb-3">   
@@ -101,11 +101,31 @@
                                         {% endfor %}    
                                     </select>     
                                 </div>                              
-                            </div>        
+                            </div>    
+                            <div class="col-lg-2">                                                              
+                                <label for="PID" class="form-label">Employee</label>                
+                                <div class="input-group mb-3"> 
+                                    <select class="form-select" aria-label="Select Employee" name="emp" id="emp">                                    
+                                       
+                                        {%if selectEmployee == "0" %}
+                                            <option value ="0" selected>Select a Employee</option>
+                                        {%else%}
+                                            <option value ="0">Select a Employee</option>
+                                        {%endif%}
+                                        {% for data in empList %}
+                                            {%if data.employeeID|slugify == selectEmployee%}                              
+                                                <option value="{{data.employeeID}}" selected>{{data.first_name}} {{data.last_name}} </option>
+                                            {%else%}
+                                                <option value="{{data.employeeID}}">{{data.first_name}} {{data.last_name}}</option>
+                                            {%endif%}
+                                        {% endfor %}    
+                                    </select>     
+                                </div>                              
+                            </div>      
                             <div class="col-lg-3 my-4">
                                 <input class="btn btn-primary" type="submit" value="Search"> 
                                 {%if dateSelected%}
-                                    <a class="btn btn-primary" href="/timesheet/get_report_list/{{dateSelected|date:'Y-m-d'}}/{{dateSelected2|date:'Y-m-d'}}/{{selectEstatus}}/{{selectLoc}}" role="button">Download</a>
+                                    <a class="btn btn-primary" href="/timesheet/get_report_list/{{dateSelected|date:'Y-m-d'}}/{{dateSelected2|date:'Y-m-d'}}/{{selectEstatus}}/{{selectLoc}}/{{selectEmployee}}" role="button">Download</a>
                                 {%endif%}  
                             </div>
                             <div class="col-lg-1 my-4">
@@ -146,8 +166,9 @@
                                         <th scope="col" style="width: 10%">Hours worked</th>
                                         <th scope="col" style="width: 10%">Starting Mileage</th>
                                         <th scope="col" style="width: 10%">Ending Mileage</th>
-                                        <th scope="col" style="width: 10%">Total Mileage</th>
-                                        <th scope="col" style="width: 10%">Status</th>            
+                                        <th scope="col" style="width: 10%">Total Mileage</th>                                        
+                                        <th scope="col" style="width: 10%">Status</th> 
+                                        <th scope="col" style="width: 4%">Updated By</th>           
                                     </tr>              
                                 </thead>
                                 <tbody>                                       
@@ -165,15 +186,8 @@
                                             <td>{{data.start_mileage}}</td> 
                                             <td>{{data.end_mileage}}</td> 
                                             <td>{{data.total_mileage}}</td> 
-                                            <td>
-                                                {% if data.Status == 1 %} Draft
-                                                {% elif  data.Status == 2%} Sent
-                                                {% elif  data.Status == 3%} Pending
-                                                {% elif  data.Status == 4%} Approved
-                                                {% elif  data.Status == 5%} Rejected
-                                                {% endif %}
-                                            </td>    
-                                            
+                                            <td>{{data.get_Status_display}}</td>    
+                                            <td>{{data.updatedBy}}</td>
                                         </tr>                                             
                                     {% endfor %}
                                 </tbody>                              

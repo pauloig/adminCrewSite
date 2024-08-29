@@ -3,5 +3,10 @@ from timesheet.models import *
 
 
 # Register your models here.
-admin.site.register(Timesheet)
 
+class TimesheetAdmin(admin.ModelAdmin):
+        list_display = ('date', 'EmployeeID', 'Status')
+        search_fields = ['date', 'Status',]
+
+
+admin.site.register(Timesheet, TimesheetAdmin)
