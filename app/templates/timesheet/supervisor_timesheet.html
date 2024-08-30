@@ -72,7 +72,7 @@
 
 
                             <div class="row">
-                                <div class="col-sm-12">
+                                <div class="col-sm-6">
                                     <div class="mb3-mobile">
                                         <label for="{{ form.end_time.id_for_label }}" class="form-label">Clock Out</label>
                                         {% render_field form.end_time class="form-control" name="end_time" id="end_time" placeholder="E.g. 1700" onchange='validateInputs(this)' %}
@@ -80,8 +80,16 @@
                                         <label id="end_time_text" class="info-text" ></label>
                                     </div>
                                 </div>
+                            
+                                <div class="col-sm-6">
+                                    <div class="mb3-mobile">
+                                        <label for="{{ form.total_hours.id_for_label }}" class="form-label2">Worked Hours</label>
+                                        {% render_field form.total_hours class="form-control" name="total_hours" id="total_hours" %}
+                                        <div class="invalid-feedback">{{ form.total_hours.errors|first }}</div>
+                                        
+                                    </div>
+                                </div>
                             </div>
-
                             
 
                             <div class="row">
@@ -173,8 +181,6 @@
                                         {% if obj.Status == 2 or obj.Status == 3 %}
                                             <a class = "btn btn-success" href="" onClick="updateStatus(this, 4, 'Are you sure to Approve this Timesheet')">approve</a>    
                                             <a class = "btn btn-warning" hx-get="/timesheet/reject_timesheet/{{form.instance.id}}" hx-target="#dialog" >Reject</a>   
-                                            
-
                                         {%endif%}
 
                                         <a class="btn btn-danger" href="/timesheet/supervisor_list" role="button">Close</a>

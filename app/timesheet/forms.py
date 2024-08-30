@@ -88,6 +88,7 @@ class TimesheetSuperForm(forms.ModelForm):
             'start_lunch_time',
             'end_lunch_time',
             'end_time',
+            'total_hours',
             'start_mileage',
             'end_mileage',
             'total_mileage',
@@ -104,6 +105,9 @@ class TimesheetSuperForm(forms.ModelForm):
         self.fields['createdBy'].disabled = True
         self.fields['created_date'].disabled = True
         self.fields['updated_date'].disabled = True
+        self.fields['total_hours'].disabled = True
+        self.fields['total_mileage'].disabled = True
+
 
 class TimesheetSuperFormApproved(forms.ModelForm):   
     class Meta:
