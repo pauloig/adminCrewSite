@@ -288,6 +288,7 @@ def report_list(request):
     dateS2 = ""
     loc = "0"
     employee = "0"
+    radio = None
 
     locationList = catalogModel.Location.objects.all()
     empList = catalogModel.Employee.objects.all()
@@ -299,6 +300,7 @@ def report_list(request):
         dateS2 = datetime.strptime(dateSelected2, '%Y-%m-%d').date()
         status = request.POST.get('status')   
         employee =  request.POST.get('emp') 
+        radio = request.POST.get('searchBy')
 
         loc = request.POST.get('location') 
         
@@ -307,33 +309,58 @@ def report_list(request):
         
         if emp == None or emp =="":
             emp = "0"
-           
-        if status == "0" and loc == "0" and employee == "0":
-            ts = Timesheet.objects.filter(Status__in = (2,3), date__range=[dateS, dateS2])
-        else:
-            if status != "0" and loc != "0" and employee != "0":
-                ts = Timesheet.objects.filter(Status = status, Location__LocationID = loc, EmployeeID__employeeID = employee, date__range=[dateS, dateS2])  
+
+        if radio == "byWork":
+            if status == "0" and loc == "0" and employee == "0":
+                ts = Timesheet.objects.filter(Status__in = (2,3), date__range=[dateS, dateS2])
             else:
-                if status != "0" and loc!= "0":    
-                    ts = Timesheet.objects.filter(Status = status , Location__LocationID = loc, date__range=[dateS, dateS2])            
-                else:    
-                    if  status != "0" and employee != "0":
-                        ts = Timesheet.objects.filter(Status = status , EmployeeID__employeeID = employee, date__range=[dateS, dateS2])   
-                    else:
-                        if  loc != "0" and employee != "0":
-                            ts = Timesheet.objects.filter(Location__LocationID = loc, EmployeeID__employeeID = employee, date__range=[dateS, dateS2])   
+                if status != "0" and loc != "0" and employee != "0":
+                    ts = Timesheet.objects.filter(Status = status, Location__LocationID = loc, EmployeeID__employeeID = employee, date__range=[dateS, dateS2])  
+                else:
+                    if status != "0" and loc!= "0":    
+                        ts = Timesheet.objects.filter(Status = status , Location__LocationID = loc, date__range=[dateS, dateS2])            
+                    else:    
+                        if  status != "0" and employee != "0":
+                            ts = Timesheet.objects.filter(Status = status , EmployeeID__employeeID = employee, date__range=[dateS, dateS2])   
                         else:
-                            if status != "0":
-                                ts = Timesheet.objects.filter(Status = status , date__range=[dateS, dateS2]) 
+                            if  loc != "0" and employee != "0":
+                                ts = Timesheet.objects.filter(Location__LocationID = loc, EmployeeID__employeeID = employee, date__range=[dateS, dateS2])   
                             else:
-                                if loc != "0":
-                                    ts = Timesheet.objects.filter(Location__LocationID = loc, date__range=[dateS, dateS2]) 
+                                if status != "0":
+                                    ts = Timesheet.objects.filter(Status = status , date__range=[dateS, dateS2]) 
                                 else:
-                                    ts = Timesheet.objects.filter(EmployeeID__employeeID = employee, date__range=[dateS, dateS2])  
+                                    if loc != "0":
+                                        ts = Timesheet.objects.filter(Location__LocationID = loc, date__range=[dateS, dateS2]) 
+                                    else:
+                                        ts = Timesheet.objects.filter(EmployeeID__employeeID = employee, date__range=[dateS, dateS2])  
+        elif radio == "byCreated":
+            if status == "0" and loc == "0" and employee == "0":
+                ts = Timesheet.objects.filter(Status__in = (2,3), created_date__date__range=[dateS, dateS2])
+            else:
+                if status != "0" and loc != "0" and employee != "0":
+                    ts = Timesheet.objects.filter(Status = status, Location__LocationID = loc, EmployeeID__employeeID = employee, created_date__date__range=[dateS, dateS2])  
+                else:
+                    if status != "0" and loc!= "0":    
+                        ts = Timesheet.objects.filter(Status = status , Location__LocationID = loc, created_date__date__range=[dateS, dateS2])            
+                    else:    
+                        if  status != "0" and employee != "0":
+                            ts = Timesheet.objects.filter(Status = status , EmployeeID__employeeID = employee, created_date__date__range=[dateS, dateS2])   
+                        else:
+                            if  loc != "0" and employee != "0":
+                                ts = Timesheet.objects.filter(Location__LocationID = loc, EmployeeID__employeeID = employee, created_date__date__range=[dateS, dateS2])   
+                            else:
+                                if status != "0":
+                                    ts = Timesheet.objects.filter(Status = status , created_date__date__range=[dateS, dateS2]) 
+                                else:
+                                    if loc != "0":
+                                        ts = Timesheet.objects.filter(Location__LocationID = loc, created_date__date__range=[dateS, dateS2]) 
+                                    else:
+                                        ts = Timesheet.objects.filter(EmployeeID__employeeID = employee, created_date__date__range=[dateS, dateS2])  
     else:
         ts = Timesheet.objects.filter(Status = -1)
         
     context["dataset"] = ts
+    context["radio"] = radio
     context["location"]=locationList
     context["empList"]=empList
     context["selectLoc"]=loc
@@ -347,7 +374,7 @@ def report_list(request):
 
 
 @login_required(login_url='/home/')
-def get_report_list(request, dateSelected, dateSelected2, status, location, employee):
+def get_report_list(request, dateSelected, dateSelected2, status, location, employee, type):
     
 
     wb = xlwt.Workbook(encoding='utf-8')
@@ -381,7 +408,7 @@ def get_report_list(request, dateSelected, dateSelected2, status, location, empl
 
                    
 
-    columns = ['Date', 'Name', 'Location', 'Clock In', 'Lunch Start','Lunch End','Clock Out','Hours worked', 'Starting Mileage','Ending Mileage','Total Mileage','Status', 'Updated By' ] 
+    columns = ['Date','Created Date' ,'Name', 'Location', 'Clock In', 'Lunch Start','Lunch End','Clock Out','Hours worked', 'Starting Mileage','Ending Mileage','Total Mileage','Status', 'Updated By' ] 
 
     for col_num in range(len(columns)):
         ws.write(row_num, col_num, columns[col_num], font_title) # at 0 row 0 column 
@@ -403,74 +430,98 @@ def get_report_list(request, dateSelected, dateSelected2, status, location, empl
                 ts = Timesheet.objects.filter(Location__LocationID = location , date__range=[dateS, dateS2])  """
 
 
-           
-    if status == "0" and location == "0" and employee == "0":
-        ts = Timesheet.objects.filter(Status__in = (2,3), date__range=[dateS, dateS2])
-    else:
-        if status != "0" and location != "0" and employee != "0":
-            ts = Timesheet.objects.filter(Status = status, Location__LocationID = location, EmployeeID__employeeID = employee, date__range=[dateS, dateS2])  
+    if type =="byWork":      
+        if status == "0" and location == "0" and employee == "0":
+            ts = Timesheet.objects.filter(Status__in = (2,3), date__range=[dateS, dateS2])
         else:
-            if status != "0" and location!= "0":    
-                ts = Timesheet.objects.filter(Status = status , Location__LocationID = location, date__range=[dateS, dateS2])            
-            else:    
-                if  status != "0" and employee != "0":
-                    ts = Timesheet.objects.filter(Status = status , EmployeeID__employeeID = employee, date__range=[dateS, dateS2])   
-                else:
-                    if  location != "0" and employee != "0":
-                        ts = Timesheet.objects.filter(Location__LocationID = location, EmployeeID__employeeID = employee, date__range=[dateS, dateS2])   
+            if status != "0" and location != "0" and employee != "0":
+                ts = Timesheet.objects.filter(Status = status, Location__LocationID = location, EmployeeID__employeeID = employee, date__range=[dateS, dateS2])  
+            else:
+                if status != "0" and location!= "0":    
+                    ts = Timesheet.objects.filter(Status = status , Location__LocationID = location, date__range=[dateS, dateS2])            
+                else:    
+                    if  status != "0" and employee != "0":
+                        ts = Timesheet.objects.filter(Status = status , EmployeeID__employeeID = employee, date__range=[dateS, dateS2])   
                     else:
-                        if status != "0":
-                            ts = Timesheet.objects.filter(Status = status , date__range=[dateS, dateS2]) 
+                        if  location != "0" and employee != "0":
+                            ts = Timesheet.objects.filter(Location__LocationID = location, EmployeeID__employeeID = employee, date__range=[dateS, dateS2])   
                         else:
-                            if location != "0":
-                                ts = Timesheet.objects.filter(Location__LocationID = location, date__range=[dateS, dateS2]) 
+                            if status != "0":
+                                ts = Timesheet.objects.filter(Status = status , date__range=[dateS, dateS2]) 
                             else:
-                                ts = Timesheet.objects.filter(EmployeeID__employeeID = employee, date__range=[dateS, dateS2])  
-    
+                                if location != "0":
+                                    ts = Timesheet.objects.filter(Location__LocationID = location, date__range=[dateS, dateS2]) 
+                                else:
+                                    ts = Timesheet.objects.filter(EmployeeID__employeeID = employee, date__range=[dateS, dateS2])  
+    elif type=="byCreated":
+        if status == "0" and location == "0" and employee == "0":
+            ts = Timesheet.objects.filter(Status__in = (2,3), created_date__date__range=[dateS, dateS2])
+        else:
+            if status != "0" and location != "0" and employee != "0":
+                ts = Timesheet.objects.filter(Status = status, Location__LocationID = location, EmployeeID__employeeID = employee, created_date__date__range=[dateS, dateS2])  
+            else:
+                if status != "0" and location!= "0":    
+                    ts = Timesheet.objects.filter(Status = status , Location__LocationID = location, created_date__date__range=[dateS, dateS2])            
+                else:    
+                    if  status != "0" and employee != "0":
+                        ts = Timesheet.objects.filter(Status = status , EmployeeID__employeeID = employee, created_date__date__range=[dateS, dateS2])   
+                    else:
+                        if  location != "0" and employee != "0":
+                            ts = Timesheet.objects.filter(Location__LocationID = location, EmployeeID__employeeID = employee, created_date__date__range=[dateS, dateS2])   
+                        else:
+                            if status != "0":
+                                ts = Timesheet.objects.filter(Status = status , created_date__date__range=[dateS, dateS2]) 
+                            else:
+                                if location != "0":
+                                    ts = Timesheet.objects.filter(Location__LocationID = location, created_date__date__range=[dateS, dateS2]) 
+                                else:
+                                    ts = Timesheet.objects.filter(EmployeeID__employeeID = employee, created_date__date__range=[dateS, dateS2])  
 
 
        
     for item in ts:
         row_num += 1
         ws.write(row_num, 0, item.date.strftime("%m/%d/%Y"), font_style) # at 0 row 0 column 
-        ws.write(row_num, 1, item.EmployeeID.first_name + ' ' + item.EmployeeID.last_name , font_style) # at 0 row 0 column  
-        ws.write(row_num,2, item.Location.LocationID + '-' + item.Location.name, font_style) # at 0 row 0 column        
-        ws.write(row_num, 3, item.start_time, font_style)
-        ws.write(row_num, 4, item.start_lunch_time, font_style)
-        ws.write(row_num, 5, item.end_lunch_time, font_style)
-        ws.write(row_num, 6, item.end_time, font_style)
-        ws.write(row_num, 7, item.total_hours, font_style)
-        ws.write(row_num, 8, item.start_mileage, font_style)
-        ws.write(row_num, 9, item.end_mileage, font_style)
-        ws.write(row_num, 10, item.total_mileage, font_style)
+        ws.write(row_num, 1, item.created_date.strftime("%m/%d/%Y"), font_style) # at 0 row 0 column 
+        ws.write(row_num, 2, item.EmployeeID.first_name + ' ' + item.EmployeeID.last_name , font_style) # at 0 row 0 column  
+        ws.write(row_num,3, item.Location.LocationID + '-' + item.Location.name, font_style) # at 0 row 0 column        
+        ws.write(row_num, 4, item.start_time, font_style)
+        ws.write(row_num, 5, item.start_lunch_time, font_style)
+        ws.write(row_num, 6, item.end_lunch_time, font_style)
+        ws.write(row_num, 7, item.end_time, font_style)
+        ws.write(row_num, 8, item.total_hours, font_style)
+        ws.write(row_num, 9, item.start_mileage, font_style)
+        ws.write(row_num, 10, item.end_mileage, font_style)
+        ws.write(row_num, 11, item.total_mileage, font_style)
 
         if item.Status == 1:
-            ws.write(row_num, 11, 'Draft', font_style)
+            ws.write(row_num, 12, 'Draft', font_style)
         elif item.Status == 2:
-            ws.write(row_num, 11, 'Sent', font_style)
+            ws.write(row_num, 12, 'Sent', font_style)
         elif item.Status == 3:
-            ws.write(row_num, 11, 'Pending', font_style)
+            ws.write(row_num, 12, 'Pending', font_style)
         elif item.Status == 4:
-            ws.write(row_num, 11, 'Approved', font_style)
+            ws.write(row_num, 12, 'Approved', font_style)
         elif item.Status == 5:
-            ws.write(row_num, 11, 'Rejected', font_style)
+            ws.write(row_num, 12, 'Rejected', font_style)
 
-        ws.write(row_num, 12, item.updatedBy, font_style)
+        ws.write(row_num, 13, item.updatedBy, font_style)
             
 
 
-    ws.col(1).width = 12000
-    ws.col(2).width = 6000
-    ws.col(3).width = 3000
+    ws.col(2).width = 12000
+    ws.col(3).width = 6000
     ws.col(4).width = 3000
     ws.col(5).width = 3000
     ws.col(6).width = 3000
-    ws.col(7).width = 4000
+    ws.col(7).width = 3000
     ws.col(8).width = 4000
     ws.col(9).width = 4000
-    ws.col(10).width = 7000
-    ws.col(11).width = 6000
-    ws.col(12).width = 3000
+    ws.col(10).width = 4000
+    ws.col(11).width = 7000
+    ws.col(12).width = 6000
+    ws.col(13).width = 3000
+    ws.col(14).width = 3000
  
 
     filename = 'Employee report ' + dateSelected + '.xls'
