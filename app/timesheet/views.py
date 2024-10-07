@@ -403,12 +403,12 @@ def get_report_list(request, dateSelected, dateSelected2, status, location, empl
     dateS2 = datetime.strptime(dateSelected2, '%Y-%m-%d').date()
     
                               
-    ws.write_merge(3, 3, 0, 12, 'Employee Report ' + str(datetime.strftime(dateS, "%m/%d/%Y")) + ' - ' + str(datetime.strftime(dateS2, "%m/%d/%Y")),font_title2)   
+    ws.write_merge(3, 3, 0, 14, 'Employee Report ' + str(datetime.strftime(dateS, "%m/%d/%Y")) + ' - ' + str(datetime.strftime(dateS2, "%m/%d/%Y")),font_title2)   
 
 
                    
 
-    columns = ['Date','Created Date' ,'Name', 'Location', 'Clock In', 'Lunch Start','Lunch End','Clock Out','Hours worked', 'Starting Mileage','Ending Mileage','Total Mileage','Status', 'Updated By' ] 
+    columns = ['Date','Created Date' ,'Name', 'Location', 'Clock In', 'Lunch Start','Lunch End','Clock Out','Hours worked', 'Starting Mileage','Ending Mileage','Total Mileage','Status', 'Updated By', 'Comments' ] 
 
     for col_num in range(len(columns)):
         ws.write(row_num, col_num, columns[col_num], font_title) # at 0 row 0 column 
@@ -506,6 +506,7 @@ def get_report_list(request, dateSelected, dateSelected2, status, location, empl
             ws.write(row_num, 12, 'Rejected', font_style)
 
         ws.write(row_num, 13, item.updatedBy, font_style)
+        ws.write(row_num, 14, item.comments, font_style)
             
 
 
@@ -521,7 +522,7 @@ def get_report_list(request, dateSelected, dateSelected2, status, location, empl
     ws.col(11).width = 7000
     ws.col(12).width = 6000
     ws.col(13).width = 3000
-    ws.col(14).width = 3000
+    ws.col(14).width = 8000
  
 
     filename = 'Employee report ' + dateSelected + '.xls'
